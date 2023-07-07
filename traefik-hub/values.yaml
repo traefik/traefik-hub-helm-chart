@@ -1,0 +1,18 @@
+replicas: 1
+maxSurge: 1
+
+image: ghcr.io/traefik/traefik-hub:{{ .Chart.AppVersion }}
+serviceAccountName: traefik-hub-controller
+
+# configure your hubToken with --set hubToken=xxx
+hubToken: ""
+
+additionalLabels: {}
+
+service:
+  # common use:
+  # type: LoadBalancer
+  # loadBalancerClass: service.k8s.aws/nlb
+  type: ClusterIP
+  # e.g. you can here define some external DNS or aws-load-balancer annotations
+  annotations: {}

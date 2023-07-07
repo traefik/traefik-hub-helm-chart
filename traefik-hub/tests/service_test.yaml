@@ -6,4 +6,4 @@ tests:
     asserts:
       - equal:
           path: metadata.name
-          value: test
+          value: traefik

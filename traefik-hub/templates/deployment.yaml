@@ -1,0 +1,137 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "traefik-hub.labels" . | nindent 4 }}
+    traefik.io/static-hash: "{{ include "traefik-hub.config.static" . | nospace | adler32sum }}"
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+     {{- include "traefik-hub.labelselector" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.maxSurge }}
+      maxUnavailable: 0
+    type: RollingUpdate
+  minReadySeconds: 0
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "9100"
+      labels:
+      {{- include "traefik-hub.labels" . | nindent 8 }}
+        traefik.io/static-hash: "{{ include "traefik-hub.config.static" . | nospace | adler32sum }}"
+    spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: name
+                      operator: In
+                      values:
+                        - traefik
+                topologyKey: "kubernetes.io/hostname"
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: "ScheduleAnyway"
+          labelSelector:
+            matchLabels:
+            {{- include "traefik-hub.labelselector" . | nindent 14 }}
+      terminationGracePeriodSeconds: 30
+      hostNetwork: false
+      priorityClassName: system-cluster-critical
+      automountServiceAccountToken: true
+      containers:
+        - image: {{ tpl .Values.image $ }}
+          imagePullPolicy: IfNotPresent
+          name: traefik
+          args:
+            - ic
+            - "--configfile=/etc/traefik/static.yaml"
+          env:
+            - name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
+              value: "true"
+          resources:
+            requests:
+              memory: 224Mi
+              cpu: 200m
+            limits:
+              memory: 448Mi
+              cpu: 400m
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 9000
+              scheme: HTTP
+            failureThreshold: 1
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 9000
+              scheme: HTTP
+            failureThreshold: 3
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+          ports:
+            - name: "admission"
+              containerPort: 7500
+              protocol: "TCP"
+            - name: "web"
+              containerPort: 8000
+              protocol: "TCP"
+            - name: "websecure"
+              containerPort: 8443
+              protocol: "TCP"
+            - name: "traefik"
+              containerPort: 9000
+              protocol: "TCP"
+            - name: "metrics"
+              containerPort: 9100
+              protocol: "TCP"
+            - name: "grpc"
+              containerPort: 9443
+              protocol: "TCP"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/traefik
+            - name: tmp
+              mountPath: /tmp
+            - name: traefik-config
+              mountPath: /etc/traefik
+      securityContext:
+        fsGroup: 65532
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: traefik-config
+          configMap:
+            name: traefik-static-config

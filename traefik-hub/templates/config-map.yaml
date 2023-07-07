@@ -1,0 +1,95 @@
+---
+{{- define "traefik-hub.config.static" -}}
+entryPoints:
+  web:
+    address: ':8000'
+    transport:
+      lifeCycle:
+        requestAcceptGraceTimeout: 30s
+        graceTimeOut: 90s
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ':8443'
+    transport:
+      lifeCycle:
+        requestAcceptGraceTimeout: 30s
+        graceTimeOut: 90s
+    proxyProtocol:
+      insecure: true
+    forwardedHeaders:
+      insecure: true
+    http:
+      tls: true
+  traefik:
+    address: ':9000'
+  metrics:
+    address: ':9100'
+  grpc:
+    address: ':9443'
+    transport:
+      lifeCycle:
+        requestAcceptGraceTimeout: 30s
+        graceTimeout: 90s
+log:
+  level: info
+  format: json
+  filePath: /dev/stderr
+accessLog:
+  format: json
+  filePath: /dev/stdout
+  fields:
+    defaultMode: keep
+    headers:
+      defaultMode: keep
+      names:
+        Set-Cookie: redact
+        Cookie: redact
+        Authorization: redact
+        X-Auth-Request-User: redact
+        X-Auth-Request-Email: redact
+api: {}
+ping:
+  entryPoint: traefik
+providers:
+  kubernetesCRD:
+    allowCrossNamespace: true
+    allowExternalNameServices: true
+    allowEmptyServices: true
+  kubernetesIngress:
+    allowEmptyServices: true
+    allowExternalNameServices: true
+metrics:
+  prometheus:
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5
+      - 7.5
+      - 10
+    addRoutersLabels: true
+    entryPoint: metrics
+forwardingTimeouts:
+  dialTimeout: 10s
+hub:
+  token: {{ .Values.hubToken }}
+  admission:
+    listenAddr: ':7500'
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-static-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "traefik-hub.labels" . | nindent 4 }}
+data:
+  static.yaml: |
+  {{ include "traefik-hub.config.static" . | nindent 4 }}
+
