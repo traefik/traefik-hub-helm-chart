@@ -1,0 +1,26 @@
+apiVersion: v2
+name: traefik-hub
+description: Traefik Hub Ingress Controller
+type: application
+version: 0.1.0
+# renovate: image=ghcr.io/traefik/traefik-hub
+appVersion: v2.0.5
+kubeVersion: ">=1.16.0-0"
+keywords:
+  - traefik
+  - ingress
+  - networking
+  - api
+  - apimanagement
+home: https://traefik.io/traefik-hub
+maintainers:
+  - name: mloiseleur
+    email: michel.loiseleur@traefik.io
+  - name: mmatur
+    email: michael.matur@traefik.io
+  - name: darkweaver87
+    email: remi.buisson@traefik.io
+icon: https://doc.traefik.io/traefik-hub/assets/images/logos-traefik-hub-horizontal.svg
+annotations:
+  artifacthub.io/changes: |
+    - "release: 🚀 publish v1.0.0"
