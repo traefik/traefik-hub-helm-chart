@@ -1,0 +1,9 @@
+suite: service configuration
+templates:
+  - service.yaml
+tests:
+  - it: should have specific label when specified
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test
