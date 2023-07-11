@@ -28,12 +28,6 @@ entryPoints:
     address: ':9000'
   metrics:
     address: ':9100'
-  grpc:
-    address: ':9443'
-    transport:
-      lifeCycle:
-        requestAcceptGraceTimeout: 30s
-        graceTimeout: 90s
 log:
   level: info
   format: json
@@ -76,7 +70,17 @@ metrics:
 forwardingTimeouts:
   dialTimeout: 10s
 hub:
-  token: {{ .Values.hubToken }}
+      {{- $isUnitTest := .Values.unitTest | default false }}
+      {{- $tokenSecret := (lookup "v1" "Secret" .Release.Namespace .Values.hubTokenSecretName) }}
+      {{- $tokenSecretData := (get $tokenSecret "data") | default dict }}
+      {{- $tokenStr := (get $tokenSecretData "token" | b64dec ) | default "" }}
+      {{- if and (eq $tokenStr "") (not $isUnitTest) }}
+        {{- fail (printf "ERROR: failed to lookup token from secret %s/%s" .Release.Namespace .Values.hubTokenSecretName)}}
+      {{- end }}
+      {{- if $isUnitTest }}
+        {{- $tokenStr = "xxx" }}
+      {{- end }}
+  token: {{ $tokenStr }}
   admission:
     listenAddr: ':7500'
 {{- end }}

@@ -1,13 +1,11 @@
 name: Release Charts
 
 on:
-  pull_request:
-  #push:
-  #  tags:
-  #    - 'v?*.?*.?*'
+  push:
+    tags:
+      - 'v?*.?*.?*'
 env:
-  #GITHUB_TAG: ${{ github.ref_name }}
-  GITHUB_TAG: v0.1.0
+  GITHUB_TAG: ${{ github.ref_name }}
 jobs:
   test:
     uses: "./.github/workflows/test.yml"
@@ -58,16 +56,10 @@ jobs:
           dry_run: true
         if: steps.version_matches.outputs.VERSION_MATCHES == 'true'
 
-      - name: Debug
-        run: |
-          cat <<EOF
-          ${{ steps.changelog.outputs.changelog }}
-          EOF  
-
-#      - name: Create release
-#        uses: ncipollo/release-action@v1
-#        with:
-#          tag: $GITHUB_TAG
-#          name: "Hub chart v${{ steps.tag_version.outputs.CHART_VERSION }}"
-#          body: ${{ steps.changelog.outputs.changelog }}
-#        if: steps.version_matches.outputs.VERSION_MATCHES == 'true'
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: $GITHUB_TAG
+          name: "Hub chart v${{ steps.tag_version.outputs.CHART_VERSION }}"
+          body: ${{ steps.changelog.outputs.changelog }}
+        if: steps.version_matches.outputs.VERSION_MATCHES == 'true'

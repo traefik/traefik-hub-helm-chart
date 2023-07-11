@@ -8,6 +8,8 @@ type: kubernetes.io/tls
 metadata:
   name: hub-agent-cert
   namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "traefik-hub.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": "pre-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
@@ -21,6 +23,8 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: hub-edge-ingress
   namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "traefik-hub.labels" . | nindent 4 }}
 webhooks:
   - name: admission.traefik.svc
     clientConfig:
@@ -51,6 +55,8 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: hub-acp
   namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "traefik-hub.labels" . | nindent 4 }}
 webhooks:
   - name: admission.traefik.svc
     clientConfig:
@@ -80,6 +86,8 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: hub-api
   namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "traefik-hub.labels" . | nindent 4 }}
 webhooks:
   - name: hub-agent.traefik.portal
     clientConfig:
@@ -214,6 +222,8 @@ kind: Service
 metadata:
   name: admission
   namespace: {{ .Release.Namespace }}
+  labels:
+  {{- include "traefik-hub.labels" . | nindent 4 }}
 spec:
   ports:
     - name: https

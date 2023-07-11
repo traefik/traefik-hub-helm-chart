@@ -1,0 +1,63 @@
+suite: deployment tests
+release:
+  name: traefik-hub
+  namespace: traefik
+tests:
+  - it: should render a deployment
+    set:
+      unitTest: true
+    template: deployment.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+  - it: should set the image
+    set:
+      unitTest: true
+      image: test
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: test
+  - it: should set the serviceAccountName
+    set:
+      unitTest: true
+      serviceAccountName: test
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: test
+  - it: should set the namespace
+    release:
+      namespace: test
+    set:
+      unitTest: true
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: test
+  - it: should set resources
+    release:
+      namespace: test
+    set:
+      unitTest: true
+      resources:
+        requests:
+          memory: 128Mi
+          cpu: 100m
+        limits:
+          memory: 256Mi
+          cpu: 200m
+    template: deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources
+          value:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 200m

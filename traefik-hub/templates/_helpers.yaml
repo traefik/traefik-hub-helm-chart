@@ -28,12 +28,12 @@ app.kubernetes.io/instance: {{ template "traefik-hub.instance-name" . }}
 {{- end }}
 
 
-{{/* Shared labels used in metada */}}
+{{/* Shared labels used in metadata */}}
 {{- define "traefik-hub.labels" -}}
 {{ include "traefik-hub.labelselector" . }}
 helm.sh/chart: {{ template "traefik-hub.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- with .Values.additionnalLabels }}
+{{- with .Values.additionalLabels }}
 {{ toYaml . }}
 {{- end }}
 {{- end }}

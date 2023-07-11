@@ -24,6 +24,3 @@ spec:
       name: "websecure"
       targetPort: websecure
       protocol: TCP
-    - port: 8443
-      name: grpc
-      targetPort: grpc

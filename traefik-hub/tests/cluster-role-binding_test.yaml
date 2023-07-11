@@ -1,0 +1,32 @@
+suite: cluster-role-binding tests
+templates:
+  - cluster-role-binding.yaml
+release:
+  name: traefik-hub
+  namespace: traefik
+tests:
+  - it: should render the cluster-role-binding
+    asserts:
+      - isKind:
+          of: ClusterRoleBinding
+      - equal:
+          path: metadata.name
+          value: traefik-hub-controller
+      - equal:
+          path: subjects[0]
+          value:
+            kind: ServiceAccount
+            name: traefik-hub-controller
+            namespace: traefik
+  - it: should namespace and serviceAccountName
+    set:
+      serviceAccountName: me
+    release:
+      namespace: test
+    asserts:
+      - equal:
+          path: subjects[0]
+          value:
+            kind: ServiceAccount
+            name: me
+            namespace: test

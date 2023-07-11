@@ -57,17 +57,18 @@ spec:
           name: traefik
           args:
             - ic
-            - "--configfile=/etc/traefik/static.yaml"
-          env:
-            - name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
-              value: "true"
+            - --configfile=/etc/traefik/static.yaml
           resources:
             requests:
-              memory: 224Mi
-              cpu: 200m
+              memory: {{.Values.resources.requests.memory }}
+              cpu: {{.Values.resources.requests.cpu }}
             limits:
-              memory: 448Mi
-              cpu: 400m
+              memory: {{.Values.resources.limits.memory }}
+              cpu: {{.Values.resources.limits.cpu }}
+          env:
+            # TODO: remove this when new traefik-hub version will be released
+            - name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
+              value: "true"
           readinessProbe:
             httpGet:
               path: /ping
@@ -104,9 +105,6 @@ spec:
             - name: "metrics"
               containerPort: 9100
               protocol: "TCP"
-            - name: "grpc"
-              containerPort: 9443
-              protocol: "TCP"
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -129,9 +127,9 @@ spec:
         fsGroup: 65532
       volumes:
         - name: data
-          emptyDir: {}
+          emptyDir: { }
         - name: tmp
-          emptyDir: {}
+          emptyDir: { }
         - name: traefik-config
           configMap:
             name: traefik-static-config
