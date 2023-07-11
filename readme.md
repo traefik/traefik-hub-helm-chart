@@ -14,15 +14,17 @@ The agent consists of two deployments: a controller and multiple authentication 
 ### Deploying Hub Ingres Controller for Kubernetes
 
 ```bash
-helm install traefik-hub traefik/traefik-hub
+kubectl create secret generic hub-agent-token --from-literal=token=XXXX
+
+helm upgrade --install traefik-hub traefik/traefik-hub
 ```
 
-You can customize the install with a `values` file. There are some [EXAMPLES](./EXAMPLES.md) provided.
+You can customize the installation with a `values` file.
 Complete documentation on all parameters is in the [default file](./traefik-hub/values.yaml)
 
 ## Upgrading Hub Agent for Kubernetes
 
-One can check what has changed in the [Releases](https://github.com/traefik/hub-helm-chart/releases).
+One can check what has changed in the [Releases](https://github.com/traefik/traefik-hub-helm-chart/releases).
 
 ```bash
 # Update repository
@@ -59,7 +61,7 @@ helm uninstall traefik-hub --namespace my-namespace
 
 We use [Semantic Versioning](https://semver.org/).
 
-Pull requests must bump the `version` of the chart specified in [Chart.yaml](./Chart.yaml):
+Pull requests must bump the `version` of the chart specified in [Chart.yaml](./traefik-hub/Chart.yaml):
 - The new version must be an alpha pre-release (e.g. 1.6.0-alpha.1)
 - The new version must reflect the nature of the change, according to Semver specification.
 

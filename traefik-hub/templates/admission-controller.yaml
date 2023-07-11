@@ -11,7 +11,7 @@ metadata:
   labels:
   {{- include "traefik-hub.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": "pre-upgrade"
+    "helm.sh/hook": "pre-install"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 data:
   tls.crt: {{ $cert.Cert | b64enc }}
