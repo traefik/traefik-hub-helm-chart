@@ -1,0 +1,61 @@
+suite: service tests
+release:
+  name: traefik-hub
+  namespace: traefik
+templates:
+  - service.yaml
+tests:
+  - it: should render a service
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: spec.loadBalancerClass
+          value: null
+      - equal:
+          path: metadata.annotations
+          value: null
+  - it: should set the namespace
+    release:
+      namespace: test
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: test
+  - it: should set service type
+    set:
+      service:
+        type: LoadBalancer
+    asserts:
+      - equal:
+          path: spec.type
+          value: LoadBalancer
+  - it: should set service type
+    set:
+      service:
+        type: LoadBalancer
+    asserts:
+      - equal:
+          path: spec.type
+          value: LoadBalancer
+  - it: should set service loadBalancerClass
+    set:
+      service:
+        loadBalancerClass: service.k8s.aws/nlb
+    asserts:
+      - equal:
+          path: spec.loadBalancerClass
+          value: service.k8s.aws/nlb
+  - it: should set service annotations
+    set:
+      service:
+        annotations:
+          key: value
+    asserts:
+      - equal:
+          path: metadata.annotations
+          value:
+            key: value

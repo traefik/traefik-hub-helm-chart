@@ -1,0 +1,36 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "timezone": "Europe/Paris",
+  "extends": [
+    ":semanticCommitTypeAll(chore)",
+    ":ignoreModulesAndTests",
+    "group:monorepos",
+    "group:recommended",
+    "replacements:all",
+    "workarounds:all"
+  ],
+  "semanticCommits": "enabled",
+  "gitAuthor": "traefiker <30906710+traefiker@users.noreply.github.com>",
+  "rebaseWhen": "conflicted",
+  "labels": [
+    "📌 dependencies"
+  ],
+  "enabledManagers": ["github-actions", "regex"],
+  "regexManagers": [
+    {
+      "datasourceTemplate": "docker",
+      "fileMatch": [ "Chart.yaml" ],
+      "matchStrings": [
+        "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
+      ]
+    },
+    {
+      "datasourceTemplate": "docker",
+      "fileMatch": [ "Makefile" ],
+      "versioningTemplate": "docker",
+      "matchStrings": [
+        "IMAGE_(.+)=(?<depName>.*?):(?<currentValue>.*)"
+      ]
+    }
+  ]
+}

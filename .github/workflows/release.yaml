@@ -1,0 +1,65 @@
+name: Release Charts
+
+on:
+  push:
+    tags:
+      - 'v?*.?*.?*'
+env:
+  GITHUB_TAG: ${{ github.ref_name }}
+jobs:
+  test:
+    uses: "./.github/workflows/test.yml"
+  release:
+    permissions:
+      contents: read
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --global --add safe.directory /charts
+
+      - name: Get chart version
+        id: chart_version
+        run: |
+          echo "CHART_VERSION=$(cat chart/traefik-hub/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}')" >> $GITHUB_OUTPUT
+
+      - name: Get tagged version
+        id: tagged_version
+        run: |
+          echo "TAGGED_VERSION=$(echo $GITHUB_TAG | sed -e 's/chart_v//g')" >> $GITHUB_OUTPUT
+
+      - name: Check if tag exists and matches the chart version
+        id: version_matches
+        run: |
+          VERSION_MATCHES=false
+          if [ ${{ steps.tagged_version.outputs.TAGGED_VERSION }} == ${{ steps.chart_version.outputs.CHART_VERSION }} ]; then
+              VERSION_MATCHES=true
+          fi
+          echo VERSION_MATCHES=$VERSION_MATCHES >> $GITHUB_OUTPUT
+
+      - name: Tag release
+        id: changelog
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
+          tag_prefix: v
+          dry_run: true
+        if: steps.version_matches.outputs.VERSION_MATCHES == 'true'
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: $GITHUB_TAG
+          name: "Hub chart v${{ steps.tag_version.outputs.CHART_VERSION }}"
+          body: ${{ steps.changelog.outputs.changelog }}
+        if: steps.version_matches.outputs.VERSION_MATCHES == 'true'

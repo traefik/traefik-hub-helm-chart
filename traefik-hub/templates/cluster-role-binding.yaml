@@ -1,0 +1,15 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: traefik-hub-controller
+  labels:
+  {{- include "traefik-hub.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-hub-controller
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccountName }}
+    namespace: {{ .Release.Namespace }}

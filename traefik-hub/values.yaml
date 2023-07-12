@@ -1,0 +1,27 @@
+replicas: 1
+maxSurge: 1
+
+image: ghcr.io/traefik/traefik-hub:{{ .Chart.AppVersion }}
+serviceAccountName: traefik-hub-controller
+
+resources:
+  requests:
+    memory: 64Mi
+    cpu: 50m
+  limits:
+    memory: 128Mi
+    cpu: 80m
+
+# configure your hubToken with --set hubTokenSecretName=mySecret
+# kubectl create secret generic mySecret --namespace traefik --from-literal=token=xxx
+hubTokenSecretName: "hub-agent-token"
+
+additionalLabels: {}
+
+service:
+  # common use:
+  # type: LoadBalancer
+  # loadBalancerClass: service.k8s.aws/nlb
+  type: ClusterIP
+  # e.g. you can here define some external DNS or aws-load-balancer annotations
+  annotations: {}
