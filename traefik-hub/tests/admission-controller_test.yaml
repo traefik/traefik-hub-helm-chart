@@ -54,7 +54,7 @@ tests:
       - equal:
           path: metadata.annotations
           value:
-            "helm.sh/hook": "pre-upgrade"
+            "helm.sh/hook": "pre-install"
             "helm.sh/hook-delete-policy": "before-hook-creation"
   - it: should issue a webhook with a certificate
     documentIndex: 1
