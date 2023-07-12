@@ -20,7 +20,7 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
       - name: Lint Chart
-        run: make lint-chart
+        run: make lint
 
       - name: Test Chart
-        run: make test-chart
+        run: make test
