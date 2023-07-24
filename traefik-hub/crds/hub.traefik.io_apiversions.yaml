@@ -4,19 +4,22 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.12.0
-  name: apis.hub.traefik.io
+  name: apiversions.hub.traefik.io
 spec:
   group: hub.traefik.io
   names:
-    kind: API
-    listKind: APIList
-    plural: apis
-    singular: api
+    kind: APIVersion
+    listKind: APIVersionList
+    plural: apiversions
+    singular: apiversion
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.pathPrefix
-      name: PathPrefix
+    - jsonPath: .spec.apiName
+      name: APIName
+      type: string
+    - jsonPath: .spec.release
+      name: Release
       type: string
     - jsonPath: .spec.service.name
       name: ServiceName
@@ -24,13 +27,10 @@ spec:
     - jsonPath: .spec.service.port.number
       name: ServicePort
       type: string
-    - jsonPath: .spec.currentVersion
-      name: CurrentVersion
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: API defines an API exposed within a portal.
+        description: APIVersion defines an APIVersion.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -45,12 +45,28 @@ spec:
           metadata:
             type: object
           spec:
-            description: APISpec configures an API.
+            description: APIVersionSpec configures an APIVersion.
             properties:
-              currentVersion:
+              apiName:
                 type: string
-              pathPrefix:
+              release:
                 type: string
+              routes:
+                items:
+                  description: Routes determines how to match the version.
+                  properties:
+                    headers:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    pathPrefix:
+                      type: string
+                    queryParams:
+                      additionalProperties:
+                        type: string
+                      type: object
+                  type: object
+                type: array
               service:
                 description: APIService configures the service to exposed on the edge.
                 properties:
@@ -102,14 +118,17 @@ spec:
                 - name
                 - port
                 type: object
+              stripPathPrefix:
+                type: boolean
             required:
-            - pathPrefix
+            - apiName
+            - service
             type: object
           status:
-            description: The current status of this API.
+            description: The current status of this APIVersion.
             properties:
               hash:
-                description: Hash is a hash representing the API.
+                description: Hash is a hash representing the APIVersion.
                 type: string
               syncedAt:
                 format: date-time

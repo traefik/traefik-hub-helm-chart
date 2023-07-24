@@ -1,11 +1,9 @@
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.12.0
   name: apiaccesses.hub.traefik.io
 spec:
   group: hub.traefik.io
@@ -40,10 +38,11 @@ spec:
               anyGroups:
                 type: boolean
               apiCollectionSelector:
-                description: A label selector is a label query over a set of resources.
-                  The result of matchLabels and matchExpressions are ANDed. An empty
-                  label selector matches all objects. A null label selector matches
-                  no objects.
+                description: APICollectionSelector selects the APICollections which
+                  are member of this APIAccess object. Multiple APIAccesses can select
+                  the same set of APICollections. This field is optional and follows
+                  standard label selector semantics. An empty APICollectionSelector
+                  matches any APICollection.
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -86,11 +85,27 @@ spec:
                       are ANDed.
                     type: object
                 type: object
+                x-kubernetes-map-type: atomic
+              apiCollections:
+                description: APICollections defines a set of APICollections which
+                  are member of this APIAccess object. Multiple APIAccesses can select
+                  the same APICollections. When combined with APICollectionSelector,
+                  this set of APICollections is appended to the matching APICollections.
+                items:
+                  description: APICollectionReference contains information to identify
+                    an APICollection to add to APIAccess.
+                  properties:
+                    name:
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
               apiSelector:
-                description: A label selector is a label query over a set of resources.
-                  The result of matchLabels and matchExpressions are ANDed. An empty
-                  label selector matches all objects. A null label selector matches
-                  no objects.
+                description: APISelector selects the APIs which are member of this
+                  APIAccess object. Multiple APIAccesses can select the same set of
+                  APIs. This field is optional and follows standard label selector
+                  semantics. An empty APISelector matches any API.
                 properties:
                   matchExpressions:
                     description: matchExpressions is a list of label selector requirements.
@@ -133,6 +148,23 @@ spec:
                       are ANDed.
                     type: object
                 type: object
+                x-kubernetes-map-type: atomic
+              apis:
+                description: APIs defines a set of APIs which are member of this APIAccess
+                  object. Multiple APIAccesses can select the same APIs. When combined
+                  with APISelector, this set of APIs is appended to the matching APIs.
+                items:
+                  description: APIReference contains information to identify an API
+                    to add to an APIAccess, an APICollection or an APIRateLimit.
+                  properties:
+                    name:
+                      type: string
+                    namespace:
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
               groups:
                 items:
                   type: string
@@ -153,9 +185,3 @@ spec:
         type: object
     served: true
     storage: true
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
