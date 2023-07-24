@@ -66,6 +66,14 @@ spec:
               memory: {{.Values.resources.limits.memory }}
               cpu: {{.Values.resources.limits.cpu }}
           env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             # TODO: remove this when new traefik-hub version will be released
             - name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
               value: "true"
