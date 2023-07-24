@@ -19,6 +19,7 @@ rules:
       - accesscontrolpolicies
       - edgeingresses
       - apis
+      - apiversions
       - apiaccesses
       - apicollections
       - apigateways
@@ -137,7 +138,13 @@ rules:
     resources:
       - leases
     verbs:
-      - '*'
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
   - apiGroups:
       - discovery.k8s.io
     resources:
