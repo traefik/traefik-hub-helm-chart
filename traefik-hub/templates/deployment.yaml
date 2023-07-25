@@ -74,9 +74,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-            # TODO: remove this when new traefik-hub version will be released
-            - name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
-              value: "true"
           readinessProbe:
             httpGet:
               path: /ping
