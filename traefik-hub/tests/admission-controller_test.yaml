@@ -21,7 +21,7 @@ tests:
       - equal:
           path: metadata.name
           value: hub-edge-ingress
-  - it: should render hub-edge-ingress webhook
+  - it: should render hub-acp webhook
     documentIndex: 2
     asserts:
       - isKind:
@@ -29,7 +29,7 @@ tests:
       - equal:
           path: metadata.name
           value: hub-acp
-  - it: should render hub-edge-ingress webhook
+  - it: should render hub-api webhook
     documentIndex: 3
     asserts:
       - isKind:
