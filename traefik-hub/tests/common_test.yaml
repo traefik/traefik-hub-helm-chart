@@ -5,14 +5,11 @@ release:
 tests:
   - it: should render default labels
     set:
-      unitTest: true
     templates:
       - admission-controller.yaml
       - cluster-role-binding.yaml
-      - config-map.yaml
       - service-account.yaml
       - service.yaml
-      - config-map.yaml
     asserts:
       - equal:
           path: metadata.labels
@@ -23,7 +20,6 @@ tests:
             helm.sh/chart: traefik-hub-0.1.0
   - it: should render default on deployment
     set:
-      unitTest: true
     template: deployment.yaml
     asserts:
       - equal:
@@ -33,19 +29,15 @@ tests:
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: traefik-hub
             helm.sh/chart: traefik-hub-0.1.0
-            traefik.io/static-hash: "3955519428"
   - it: should add additionalLabels
     set:
-      unitTest: true
       additionalLabels:
         key: value
     templates:
       - admission-controller.yaml
       - cluster-role-binding.yaml
-      - config-map.yaml
       - service-account.yaml
       - service.yaml
-      - config-map.yaml
     asserts:
       - equal:
           path: metadata.labels
@@ -57,7 +49,6 @@ tests:
             key: value
   - it: should render default on deployment
     set:
-      unitTest: true
       additionalLabels:
         key: value
     template: deployment.yaml
@@ -70,4 +61,3 @@ tests:
             app.kubernetes.io/name: traefik-hub
             helm.sh/chart: traefik-hub-0.1.0
             key: value
-            traefik.io/static-hash: "3955519428"

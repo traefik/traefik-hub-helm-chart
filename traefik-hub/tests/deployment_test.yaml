@@ -5,14 +5,12 @@ release:
 tests:
   - it: should render a deployment
     set:
-      unitTest: true
     template: deployment.yaml
     asserts:
       - isKind:
           of: Deployment
   - it: should set the image
     set:
-      unitTest: true
       image: test
     template: deployment.yaml
     asserts:
@@ -21,7 +19,6 @@ tests:
           value: test
   - it: should set the serviceAccountName
     set:
-      unitTest: true
       serviceAccountName: test
     template: deployment.yaml
     asserts:
@@ -32,7 +29,6 @@ tests:
     release:
       namespace: test
     set:
-      unitTest: true
     template: deployment.yaml
     asserts:
       - equal:
@@ -42,7 +38,6 @@ tests:
     release:
       namespace: test
     set:
-      unitTest: true
       resources:
         requests:
           memory: 128Mi
@@ -61,3 +56,28 @@ tests:
             limits:
               memory: 256Mi
               cpu: 200m
+  - it: should add arguments
+    release:
+      namespace: test
+    set:
+      additionalArguments:
+        - --test
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --test
+  - it: should add env variables
+    release:
+      namespace: test
+    set:
+      additionalEnvVars:
+        - name: TEST
+          value: "test"
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TEST
+            value: "test"
