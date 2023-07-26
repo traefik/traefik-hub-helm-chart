@@ -2,6 +2,8 @@ suite: config-map labels test
 release:
   name: traefik-hub
   namespace: traefik
+chart:
+  version: 0.1.0
 tests:
   - it: should render default labels
     set:
