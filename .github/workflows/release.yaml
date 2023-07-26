@@ -35,7 +35,7 @@ jobs:
       - name: Get chart version
         id: chart_version
         run: |
-          echo "CHART_VERSION=$(cat chart/traefik-hub/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}')" >> $GITHUB_OUTPUT
+          echo "CHART_VERSION=$(cat traefik-hub/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}')" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
         id: tag_exists
@@ -59,7 +59,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: "Hub chart v${{ steps.tag_version.outputs.CHART_VERSION }}"
+          name: ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
           prerelease: ${{ contains(steps.chart_version.outputs.CHART_VERSION, '-') }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
