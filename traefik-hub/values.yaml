@@ -16,6 +16,8 @@ resources:
 # kubectl create secret generic mySecret --namespace traefik --from-literal=token=xxx
 hubTokenSecretName: "hub-agent-token"
 
+additionalArguments: []
+additionalEnvVars: []
 additionalLabels: {}
 
 service:

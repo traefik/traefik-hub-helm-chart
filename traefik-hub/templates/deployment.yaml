@@ -5,7 +5,6 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
   {{- include "traefik-hub.labels" . | nindent 4 }}
-    traefik.io/static-hash: "{{ include "traefik-hub.config.static" . | nospace | adler32sum }}"
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -25,7 +24,6 @@ spec:
         prometheus.io/port: "9100"
       labels:
       {{- include "traefik-hub.labels" . | nindent 8 }}
-        traefik.io/static-hash: "{{ include "traefik-hub.config.static" . | nospace | adler32sum }}"
     spec:
       serviceAccountName: {{ .Values.serviceAccountName }}
       affinity:
@@ -57,7 +55,22 @@ spec:
           name: traefik
           args:
             - ic
-            - --configfile=/etc/traefik/static.yaml
+            - --entrypoints.metrics.address=:9100
+            - --entrypoints.traefik.address=:9000
+            - --entrypoints.web.address=:8000
+            - --entrypoints.websecure.address=:8443
+            - --hub.admission.listenAddr=:7500
+            - --hub.token=$(HUB_TOKEN)
+            - --metrics.prometheus.entryPoint=metrics
+            - --ping.entrypoint=traefik
+            - --providers.kubernetesCRD.allowCrossNamespace=true
+            - --providers.kubernetesCRD.allowEmptyServices=true
+            - --providers.kubernetesCRD.allowExternalNameServices=true
+            - --providers.kubernetesIngress.allowEmptyServices=true
+            - --providers.kubernetesIngress.allowExternalNameServices=true
+            {{- with .Values.additionalArguments }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             requests:
               memory: {{.Values.resources.requests.memory }}
@@ -66,6 +79,14 @@ spec:
               memory: {{.Values.resources.limits.memory }}
               cpu: {{.Values.resources.limits.cpu }}
           env:
+            # TODO: remove this when new traefik-hub version will be released
+            - name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
+              value: "true"
+            - name: HUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.hubTokenSecretName }}
+                  key: token
             - name: POD_NAME
               valueFrom:
                 fieldRef:
@@ -74,6 +95,9 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            {{- with .Values.additionalEnvVars }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /ping
@@ -126,8 +150,6 @@ spec:
               mountPath: /var/lib/traefik
             - name: tmp
               mountPath: /tmp
-            - name: traefik-config
-              mountPath: /etc/traefik
       securityContext:
         fsGroup: 65532
       volumes:
@@ -135,6 +157,3 @@ spec:
           emptyDir: { }
         - name: tmp
           emptyDir: { }
-        - name: traefik-config
-          configMap:
-            name: traefik-static-config

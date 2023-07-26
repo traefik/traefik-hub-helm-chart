@@ -2,28 +2,23 @@ suite: deployment tests
 release:
   name: traefik-hub
   namespace: traefik
+templates:
+- deployment.yaml
 tests:
   - it: should render a deployment
-    set:
-      unitTest: true
-    template: deployment.yaml
     asserts:
       - isKind:
           of: Deployment
   - it: should set the image
     set:
-      unitTest: true
       image: test
-    template: deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
           value: test
   - it: should set the serviceAccountName
     set:
-      unitTest: true
       serviceAccountName: test
-    template: deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.serviceAccountName
@@ -31,9 +26,6 @@ tests:
   - it: should set the namespace
     release:
       namespace: test
-    set:
-      unitTest: true
-    template: deployment.yaml
     asserts:
       - equal:
           path: metadata.namespace
@@ -42,7 +34,6 @@ tests:
     release:
       namespace: test
     set:
-      unitTest: true
       resources:
         requests:
           memory: 128Mi
@@ -50,7 +41,6 @@ tests:
         limits:
           memory: 256Mi
           cpu: 200m
-    template: deployment.yaml
     asserts:
       - equal:
           path: spec.template.spec.containers[0].resources
@@ -61,3 +51,56 @@ tests:
             limits:
               memory: 256Mi
               cpu: 200m
+  - it: should provide needed args by default
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].args
+          count: 14
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: ic
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            --hub.token=$(HUB_TOKEN)
+  - it: should provide needed env by default
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].env
+          count: 4
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: hub-agent-token
+  - it: should add arguments
+    release:
+      namespace: test
+    set:
+      additionalArguments:
+        - --test
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --test
+  - it: should add env variables
+    release:
+      namespace: test
+    set:
+      additionalEnvVars:
+        - name: TEST
+          value: "test"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TEST
+            value: "test"
