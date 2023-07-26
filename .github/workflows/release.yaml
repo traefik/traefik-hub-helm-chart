@@ -8,7 +8,7 @@ env:
   GITHUB_TAG: ${{ github.ref_name }}
 jobs:
   test:
-    uses: "./.github/workflows/test.yml"
+    uses: "./.github/workflows/test.yaml"
   release:
     permissions:
       contents: read
