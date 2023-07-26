@@ -2,8 +2,6 @@ replicas: 1
 maxSurge: 1
 
 image: ghcr.io/traefik/traefik-hub:{{ .Chart.AppVersion }}
-additionalEnvVars: []
-additionalArguments: []
 serviceAccountName: traefik-hub-controller
 
 resources:
@@ -18,6 +16,8 @@ resources:
 # kubectl create secret generic mySecret --namespace traefik --from-literal=token=xxx
 hubTokenSecretName: "hub-agent-token"
 
+additionalArguments: []
+additionalEnvVars: []
 additionalLabels: {}
 
 service:
