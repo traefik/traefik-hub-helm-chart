@@ -12,8 +12,6 @@ jobs:
   test:
     uses: "./.github/workflows/test.yaml"
   release:
-    permissions:
-      contents: read
     needs: test
     runs-on: ubuntu-latest
     steps:
