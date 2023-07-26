@@ -7,7 +7,7 @@ on:
 
 env:
   tag_prefix: v
-  GITHUB_TAG: ${{ github.ref_name }}
+
 jobs:
   test:
     uses: "./.github/workflows/test.yaml"
@@ -37,38 +37,32 @@ jobs:
         run: |
           echo "CHART_VERSION=$(cat chart/traefik-hub/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}')" >> $GITHUB_OUTPUT
 
-      - name: Get tagged version
-        id: tagged_version
+      - name: Check if tag exists
+        id: tag_exists
         run: |
-          echo "TAGGED_VERSION=$(echo $GITHUB_TAG | sed -e 's/chart_v//g')" >> $GITHUB_OUTPUT
-
-      - name: Check if tag exists and matches the chart version
-        id: version_matches
-        run: |
-          VERSION_MATCHES=false
-          if [ ${{ steps.tagged_version.outputs.TAGGED_VERSION }} == ${{ steps.chart_version.outputs.CHART_VERSION }} ]; then
-              VERSION_MATCHES=true
+          TAG_EXISTS=true
+          if ! [ $(git tag -l "${{ env.tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}") ]; then
+              TAG_EXISTS=false
           fi
-          echo VERSION_MATCHES=$VERSION_MATCHES >> $GITHUB_OUTPUT
+          echo TAG_EXISTS=$TAG_EXISTS >> $GITHUB_OUTPUT
 
       - name: Tag release
-        id: changelog
+        id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
           tag_prefix: ${{ env.tag_prefix }}
-          dry_run: true
-        if: steps.version_matches.outputs.VERSION_MATCHES == 'false'
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          tag: $GITHUB_TAG
+          tag: ${{ steps.tag_version.outputs.new_tag }}
           name: "Hub chart v${{ steps.tag_version.outputs.CHART_VERSION }}"
-          body: ${{ steps.changelog.outputs.changelog }}
+          body: ${{ steps.tag_version.outputs.changelog }}
           prerelease: ${{ contains(steps.chart_version.outputs.CHART_VERSION, '-') }}
-        if: steps.version_matches.outputs.VERSION_MATCHES == 'false'
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart
         uses: stefanprodan/helm-gh-pages@master
@@ -83,4 +77,4 @@ jobs:
           index_dir: .
           commit_username: traefiker
           commit_email: 30906710+traefiker@users.noreply.github.com
-        if: steps.version_matches.outputs.VERSION_MATCHES == 'false'
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
