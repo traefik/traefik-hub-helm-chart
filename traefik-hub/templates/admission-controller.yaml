@@ -1,5 +1,5 @@
 {{- $altNames := list ( printf "admission.%s.svc" .Release.Namespace ) -}}
-{{- $cert := genSelfSignedCert ( printf "admission.%s.svc" .Release.Namespace ) nil $altNames 365 -}}
+{{- $cert := genSelfSignedCert ( printf "admission.%s.svc" .Release.Namespace ) (list) $altNames 365 -}}
 
 ---
 apiVersion: v1
