@@ -2,8 +2,7 @@
 
 ## Introduction
 
-This chart installs the Hub agent in a Kubernetes cluster.
-The agent consists of two deployments: a controller and multiple authentication servers.
+This chart installs the Traefik Hub agent in _Ingress Controller_ mode on a Kubernetes cluster.
 
 ## Installation
 
@@ -31,7 +30,7 @@ One can check what has changed in the [Releases](https://github.com/traefik/trae
 helm repo update
 # See current Chart & Traefik-Hub version
 helm search repo traefik/traefik-hub
-# Upgrade Traefik-Hub 
+# Upgrade Traefik-Hub
 helm upgrade traefik-hub traefik/traefik-hub
 ```
 
