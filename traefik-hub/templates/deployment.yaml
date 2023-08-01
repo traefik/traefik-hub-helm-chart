@@ -47,7 +47,7 @@ spec:
             {{- include "traefik-hub.labelselector" . | nindent 14 }}
       terminationGracePeriodSeconds: 30
       hostNetwork: false
-      priorityClassName: system-cluster-critical
+      priorityClassName: {{ .Values.priorityClassName }}
       automountServiceAccountToken: true
       containers:
         - image: {{ tpl .Values.image $ }}
@@ -59,6 +59,7 @@ spec:
             - --entrypoints.traefik.address=:9000
             - --entrypoints.web.address=:8000
             - --entrypoints.websecure.address=:8443
+            - --entrypoints.websecure.http.tls=true
             - --hub.admission.listenAddr=:7500
             - --hub.token=$(HUB_TOKEN)
             - --metrics.prometheus.entryPoint=metrics
