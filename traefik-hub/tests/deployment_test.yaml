@@ -55,7 +55,7 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.template.spec.containers[0].args
-          count: 14
+          count: 15
       - contains:
           path: spec.template.spec.containers[0].args
           content: ic
@@ -104,3 +104,15 @@ tests:
           content:
             name: TEST
             value: "test"
+  - it: should add priorityClassName
+    set:
+      priorityClassName: system-cluster-critical
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: system-cluster-critical
+  - it: should not set priorityClassName by default
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: null
