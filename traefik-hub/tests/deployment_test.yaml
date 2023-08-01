@@ -115,4 +115,4 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.priorityClassName
-          value: ""
+          value: null
