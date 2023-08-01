@@ -1,6 +1,6 @@
 replicas: 1
 maxSurge: 1
-# priorityClassName: "system-cluster-critical"
+priorityClassName: "" # On production system, you may want to set it to "system-cluster-critical"
 
 image: ghcr.io/traefik/traefik-hub:{{ .Chart.AppVersion }}
 serviceAccountName: traefik-hub-controller

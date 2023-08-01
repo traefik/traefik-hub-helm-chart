@@ -111,3 +111,8 @@ tests:
       - equal:
           path: spec.template.spec.priorityClassName
           value: system-cluster-critical
+  - it: should not set priorityClassName by default
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: ""
