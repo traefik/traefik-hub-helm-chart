@@ -30,7 +30,13 @@ tests:
       - equal:
           path: metadata.namespace
           value: test
-  - it: should set resources
+  - it: should not set resources by default
+    release:
+      namespace: test
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].resources
+  - it: should set resources when specified
     release:
       namespace: test
     set:
