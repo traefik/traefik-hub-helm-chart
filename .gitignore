@@ -1,1 +1,4 @@
 .idea/
+# vim temporary files
+*.swp
+*.swo

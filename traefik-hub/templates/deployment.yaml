@@ -72,13 +72,19 @@ spec:
             {{- with .Values.additionalArguments }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- with .Values.resources }}
           resources:
+            {{- with .requests }}
             requests:
-              memory: {{.Values.resources.requests.memory }}
-              cpu: {{.Values.resources.requests.cpu }}
+              memory: {{ .memory }}
+              cpu: {{ .cpu }}
+            {{- end }}
+            {{- with .limits }}
             limits:
-              memory: {{.Values.resources.limits.memory }}
-              cpu: {{.Values.resources.limits.cpu }}
+              memory: {{ .memory }}
+              cpu: {{ .cpu }}
+            {{- end }}
+          {{- end }}
           env:
             # TODO: remove this when new traefik-hub version will be released
             - name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
