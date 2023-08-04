@@ -18,6 +18,9 @@ spec:
     - jsonPath: .spec.apiName
       name: APIName
       type: string
+    - jsonPath: .spec.title
+      name: Title
+      type: string
     - jsonPath: .spec.release
       name: Release
       type: string
@@ -53,7 +56,7 @@ spec:
                 type: string
               routes:
                 items:
-                  description: Routes determines how to match the version.
+                  description: Route determines how to match the version.
                   properties:
                     headers:
                       additionalProperties:
@@ -120,6 +123,8 @@ spec:
                 type: object
               stripPathPrefix:
                 type: boolean
+              title:
+                type: string
             required:
             - apiName
             - service
