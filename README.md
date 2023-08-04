@@ -34,12 +34,20 @@ helm search repo traefik/traefik-hub
 helm upgrade traefik-hub traefik/traefik-hub
 ```
 
-### Upgrading CRDs
+## Upgrading CRDs
 
 With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions). Please read carefully release notes of this chart before upgrading CRDs.
 
 ```bash
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-hub-helm-chart/traefik-hub/crds/
+```
+
+## Upgrading from v1.x.x
+
+To upgrade from v1.x.x, a secret needs to be manually removed first:
+
+```bash
+kubectl delete secret hub-agent-cert -n traefik-hub
 ```
 
 ## Uninstall
