@@ -4,7 +4,7 @@
 
 <div align="center" style="margin: 30px;">
 <a href="https://hub.traefik.io/">
-  <img src="https://doc.traefik.io/traefik-hub/assets/img/hub-logo-test.svg"   style="width:250px;" align="center" />
+  <img src="https://doc.traefik.io/traefik-hub/assets/img/traefik-hub-logo.svg"   style="width:250px;" align="center" />
 </a>
 <br />
 <br />
