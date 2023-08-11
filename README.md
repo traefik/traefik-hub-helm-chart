@@ -48,7 +48,7 @@ You can customize the installation with a `values` file.
 
 ## Upgrading Hub Agent for Kubernetes
 
-One can check what has changed in the [Releases](https://github.com/traefik/traefik-hub-helm-chart/releases).
+One can check what has changed in the [release](https://github.com/traefik/traefik-hub-helm-chart/releases) overview page.
 
 Update the repository:
 
@@ -72,9 +72,9 @@ helm upgrade traefik-hub traefik/traefik-hub
 
 ## Upgrading CRDs
 
-With Helm v3, CRDs created by this chart can not be updated, consult the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions).
+With Helm v3, CRDs created by this chart can not be updated, consult the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions) for more information.
 
-> Please read carefully the release notes of this chart before upgrading CRDs!
+> Please read carefully the [release notes](https://github.com/traefik/traefik-hub-helm-chart/releases) of this chart before upgrading CRDs!
 
 ```shell
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-hub-helm-chart/traefik-hub/crds/
