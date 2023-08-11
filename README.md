@@ -57,13 +57,13 @@ Update the repository:
 helm repo update
 ```
 
-Check the current Chart & Traefik-Hub version:
+Check the current Chart & Traefik Hub version:
 
 ```shell
 helm search repo traefik/traefik-hub
 ```
 
-Upgrade Traefik-Hub:
+Upgrade Traefik Hub:
 
 ```shell
 helm upgrade traefik-hub traefik/traefik-hub
@@ -99,7 +99,7 @@ kubectl delete secret hub-agent-cert -n traefik-hub
 helm uninstall traefik-hub
 ```
 
-If Traefik-Hub was installed in a specific namespace:
+If Traefik Hub was installed in a specific namespace:
 
 ```shell
 helm uninstall traefik-hub --namespace my-namespace
