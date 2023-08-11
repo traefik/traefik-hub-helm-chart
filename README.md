@@ -10,6 +10,7 @@
 <br />
 
 <div align="center">
+    <a href="https://traefik.io/traefik-hub/"> Website</a> |
     <a href="https://hub.traefik.io">Log In</a> |
     <a href="https://doc.traefik.io/traefik-hub/">Documentation</a>
 </div>
