@@ -41,8 +41,8 @@ kubectl create secret generic hub-agent-token --from-literal=token=XXXX
 helm upgrade --install traefik-hub traefik/traefik-hub
 ```
 
-You can customize the installation with a `values` file.
-Complete documentation on all parameters is in the [default file](./traefik-hub/values.yaml).
+You can customize the installation with a `values` file.  
+ Find the complete documentation on all parameters is in the [default value file](./traefik-hub/values.yaml).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -73,7 +73,8 @@ helm upgrade traefik-hub traefik/traefik-hub
 ## Upgrading CRDs
 
 With Helm v3, CRDs created by this chart can not be updated, consult the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions).
-Please read carefully release notes of this chart before upgrading CRDs.
+
+> Please read carefully the release notes of this chart before upgrading CRDs!
 
 ```shell
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-hub-helm-chart/traefik-hub/crds/
@@ -111,10 +112,10 @@ helm uninstall traefik-hub --namespace my-namespace
 
 We use [Semantic Versioning](https://semver.org/).
 
-Pull requests must bump the `version` of the chart specified in [Chart.yaml](./traefik-hub/Chart.yaml):
+Pull requests must bump the `version` of the chart specified in the [Chart.yaml](./traefik-hub/Chart.yaml) file:
 
 - The new version must be an alpha pre-release (e.g. 1.6.0-alpha.1)
-- The new version must reflect the nature of the change, according to the SemVer specification.
+- The new version must reflect the nature of the change, according to the SemVer specification
 
 A chart can be made available publicly by removing the pre-release suffix, this must be done on a separate PR by a maintainer.
 
