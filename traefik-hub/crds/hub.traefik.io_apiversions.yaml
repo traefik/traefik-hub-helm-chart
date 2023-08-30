@@ -52,6 +52,49 @@ spec:
             properties:
               apiName:
                 type: string
+              cors:
+                description: CORS configures the CORS for the API.
+                properties:
+                  allowCredentials:
+                    description: AllowCredentials defines whether the request can
+                      include user credentials.
+                    type: boolean
+                  allowHeaders:
+                    description: AllowHeaders defines the Access-Control-Request-Headers
+                      values sent in preflight response.
+                    items:
+                      type: string
+                    type: array
+                  allowMethods:
+                    description: AllowMethods defines the Access-Control-Request-Method
+                      values sent in preflight response.
+                    items:
+                      type: string
+                    type: array
+                  allowOriginList:
+                    description: AllowOriginList is a list of allowable origins. Can
+                      also be a wildcard origin "*".
+                    items:
+                      type: string
+                    type: array
+                  allowOriginListRegex:
+                    description: AllowOriginListRegex is a list of allowable origins
+                      written following the Regular Expression syntax (https://golang.org/pkg/regexp/).
+                    items:
+                      type: string
+                    type: array
+                  exposeHeaders:
+                    description: ExposeHeaders defines the Access-Control-Expose-Headers
+                      values sent in preflight response.
+                    items:
+                      type: string
+                    type: array
+                  maxAge:
+                    description: MaxAge defines the time that a preflight request
+                      may be cached.
+                    format: int64
+                    type: integer
+                type: object
               release:
                 type: string
               routes:
