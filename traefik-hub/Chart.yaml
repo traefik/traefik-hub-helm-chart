@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik-hub
 description: Traefik Hub Ingress Controller
 type: application
-version: 2.1.0
+version: 2.2.0
 # renovate: image=ghcr.io/traefik/traefik-hub
-appVersion: v2.1.0
+appVersion: v2.2.0
 kubeVersion: ">=1.16.0-0"
 keywords:
   - traefik
