@@ -92,6 +92,35 @@ spec:
                 type: object
               currentVersion:
                 type: string
+              headers:
+                description: Headers configures the requests and responses headers
+                  manipulations.
+                properties:
+                  request:
+                    description: HeadersConfig configures headers manipulations.
+                    properties:
+                      delete:
+                        items:
+                          type: string
+                        type: array
+                      set:
+                        additionalProperties:
+                          type: string
+                        type: object
+                    type: object
+                  response:
+                    description: HeadersConfig configures headers manipulations.
+                    properties:
+                      delete:
+                        items:
+                          type: string
+                        type: array
+                      set:
+                        additionalProperties:
+                          type: string
+                        type: object
+                    type: object
+                type: object
               pathPrefix:
                 type: string
               service:
