@@ -122,3 +122,29 @@ tests:
       - equal:
           path: spec.template.spec.priorityClassName
           value: null
+  - it: should not mount plugins volume by default
+    set:
+      image: test
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].volumeMounts
+          count: 2
+  - it: should mount plugins volume and add extra args when plugins are used
+    set:
+      image: test
+      plugins:
+        - name: crowdsec-bouncer-traefik-plugin
+          moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+          version: v1.1.15
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].volumeMounts
+          count: 3
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            --experimental.plugins.crowdsec-bouncer-traefik-plugin.modulename=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            --experimental.plugins.crowdsec-bouncer-traefik-plugin.version=v1.1.15
