@@ -31,3 +31,9 @@ service:
   type: ClusterIP
   # e.g. you can here define some external DNS or aws-load-balancer annotations
   annotations: {}
+
+# use it to load plugins
+plugins: []
+# - name: crowdsec-bouncer-traefik-plugin
+#   moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+#   version: v1.1.15

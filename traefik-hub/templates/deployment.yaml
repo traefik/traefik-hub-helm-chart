@@ -1,3 +1,10 @@
+{{- $additionnalArgs := .Values.additionalArguments }}
+{{- range $key, $value := .Values.plugins }}
+  {{ $additionnalArgs = append $additionnalArgs (printf "--experimental.plugins.%s.modulename=%s" $value.name $value.moduleName) }}
+  {{ $additionnalArgs = append $additionnalArgs (printf "--experimental.plugins.%s.version=%s" $value.name $value.version) }}
+{{- end }}
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -69,7 +76,7 @@ spec:
             - --providers.kubernetesCRD.allowExternalNameServices=true
             - --providers.kubernetesIngress.allowEmptyServices=true
             - --providers.kubernetesIngress.allowExternalNameServices=true
-            {{- with .Values.additionalArguments }}
+            {{- with $additionnalArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
           {{- with .Values.resources }}
@@ -157,6 +164,10 @@ spec:
               mountPath: /var/lib/traefik
             - name: tmp
               mountPath: /tmp
+            {{- if ne (len .Values.plugins) 0 }}
+            - name: plugins
+              mountPath: /plugins-storage
+            {{- end }}
       securityContext:
         fsGroup: 65532
       volumes:
@@ -164,3 +175,7 @@ spec:
           emptyDir: { }
         - name: tmp
           emptyDir: { }
+        {{- if ne (len .Values.plugins) 0 }}
+        - name: plugins
+          emptyDir: { }
+        {{- end }}
