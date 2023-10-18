@@ -148,3 +148,15 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             --experimental.plugins.crowdsec-bouncer-traefik-plugin.version=v1.1.15
+  - it: should have no imagePullSecrets
+    asserts:
+      - isNull:
+          path: spec.template.spec.imagePullSecrets
+  - it: should set imagePullSecrets correctly
+    set:
+      imagePullSecrets:
+        - name: regcred
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets[0].name
+          value: regcred

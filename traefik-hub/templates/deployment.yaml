@@ -32,6 +32,10 @@ spec:
       labels:
       {{- include "traefik-hub.labels" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ .Values.serviceAccountName }}
       affinity:
         podAntiAffinity:
