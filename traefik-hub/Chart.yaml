@@ -23,4 +23,5 @@ maintainers:
 icon: https://doc.traefik.io/traefik-hub/assets/images/logos-traefik-hub-horizontal.svg
 annotations:
   artifacthub.io/changes: |
-    - "fix: exit when leader elector stopped"
+    - "chore: upgrade traefik-hub version"
+    - "Feat allow to set imagePullSecrets"
