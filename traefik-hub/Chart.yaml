@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik-hub
 description: Traefik Hub Ingress Controller
 type: application
-version: 2.5.0
+version: 2.5.1
 # renovate: image=ghcr.io/traefik/traefik-hub
 appVersion: v2.4.2
 kubeVersion: ">=1.16.0-0"
@@ -23,5 +23,4 @@ maintainers:
 icon: https://doc.traefik.io/traefik-hub/assets/images/logos-traefik-hub-horizontal.svg
 annotations:
   artifacthub.io/changes: |
-    - "chore: upgrade traefik-hub version"
-    - "Feat allow to set imagePullSecrets"
+    - "feat: upgrade traefik hub to version v2.4.2"
