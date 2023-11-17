@@ -34,6 +34,14 @@ service:
   type: ClusterIP
   # e.g. you can here define some external DNS or aws-load-balancer annotations
   annotations: {}
+  # Can be customized with, for instance, specific nodePort
+  ports:
+    - port: 80
+      name: web
+      targetPort: web
+    - port: 443
+      name: websecure
+      targetPort: websecure
 
 # use it to load plugins
 plugins: []

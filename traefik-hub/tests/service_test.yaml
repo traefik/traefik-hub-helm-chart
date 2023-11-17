@@ -18,6 +18,18 @@ tests:
       - equal:
           path: metadata.annotations
           value: null
+      - contains:
+          path: spec.ports
+          content:
+            name: web
+            port: 80
+            targetPort: web
+      - contains:
+          path: spec.ports
+          content:
+            name: websecure
+            port: 443
+            targetPort: websecure
   - it: should set the namespace
     release:
       namespace: test
@@ -59,3 +71,30 @@ tests:
           path: metadata.annotations
           value:
             key: value
+  - it: should set custom nodePort
+    set:
+      service:
+        ports:
+          - name: web
+            port: 80
+            targetPort: web
+            nodePort: 30000
+          - name: websecure
+            port: 443
+            targetPort: websecure
+            nodePort: 30001
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: web
+            port: 80
+            targetPort: web
+            nodePort: 30000
+      - contains:
+          path: spec.ports
+          content:
+            name: websecure
+            port: 443
+            targetPort: websecure
+            nodePort: 30001

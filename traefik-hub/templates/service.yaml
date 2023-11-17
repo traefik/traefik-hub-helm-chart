@@ -15,12 +15,4 @@ spec:
   loadBalancerClass: {{ .Values.service.loadBalancerClass }}
   selector:
      {{- include "traefik-hub.labelselector" . | nindent 6 }}
-  ports:
-    - port: 80
-      name: "web"
-      targetPort: web
-      protocol: TCP
-    - port: 443
-      name: "websecure"
-      targetPort: websecure
-      protocol: TCP
+  ports: {{ toYaml .Values.service.ports | nindent 4 }}
