@@ -4,7 +4,7 @@ description: Traefik Hub Ingress Controller
 type: application
 version: 2.6.0
 # renovate: image=ghcr.io/traefik/traefik-hub
-appVersion: v2.5.0
+appVersion: v2.6.0
 kubeVersion: ">=1.16.0-0"
 keywords:
   - traefik
