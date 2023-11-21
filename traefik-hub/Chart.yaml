@@ -2,10 +2,10 @@ apiVersion: v2
 name: traefik-hub
 description: Traefik Hub Ingress Controller
 type: application
-version: 2.6.0
+version: 2.7.0
 # renovate: image=ghcr.io/traefik/traefik-hub
 appVersion: v2.6.0
-kubeVersion: ">=1.16.0-0"
+kubeVersion: ">=1.26.0-0"
 keywords:
   - traefik
   - ingress
@@ -23,4 +23,5 @@ maintainers:
 icon: https://doc.traefik.io/traefik-hub/assets/images/logos-traefik-hub-horizontal.svg
 annotations:
   artifacthub.io/changes: |
-    - "feat: upgrade traefik hub to version v2.4.2"
+    - "feat: upgrade traefik hub to version v2.6.0"
+    - "feat: customizable Service ports"
