@@ -33,16 +33,6 @@ rules:
       - patch
       - delete
       - get
-  - apiGroups:
-      - traefik.containo.us
-      - traefik.io
-    resources:
-      - middlewares
-    verbs:
-      - create
-      - get
-      - update
-      - delete
   # Other RBACs.
   - apiGroups:
       - ""
@@ -60,6 +50,7 @@ rules:
       - traefikservices
       - ingressroutetcps
       - ingressrouteudps
+      - ingressroutes
       - tlsoptions
       - tlsstores
       - serverstransports
@@ -67,19 +58,6 @@ rules:
       - get
       - list
       - watch
-  - apiGroups:
-      - traefik.containo.us
-      - traefik.io
-    resources:
-      - ingressroutes
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
   - apiGroups:
       - ""
     resources:
@@ -127,12 +105,6 @@ rules:
       - update
       - create
       - delete
-  - apiGroups:
-      - ""
-    resources:
-      - pods/log
-    verbs:
-      - get
   - apiGroups:
       - coordination.k8s.io
     resources:
