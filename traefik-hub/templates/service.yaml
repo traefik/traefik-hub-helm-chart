@@ -41,9 +41,19 @@ spec:
   externalIPs: {{ toYaml . | nindent 4}}
   {{- end }}
   {{- with .ipFamilyPolicy }}
+    {{- $allowedValues := list "SingleStack" "PreferDualStack" "RequireDualStack" }}
+    {{- if not (has . $allowedValues) }}
+      {{- fail (cat "ERROR: Allowed values on service.ipFamilyPolicy are" $allowedValues) }}
+    {{- end }}
   ipFamilyPolicy: {{ . }}
   {{- end }}
   {{- with .ipFamilies}}
+    {{- $allowedValues := list "IPv4" "IPv6" }}
+    {{- range $key, $val := . }}
+      {{- if not (has $val $allowedValues) }}
+      {{- fail (cat "ERROR: Allowed values on service.ipFamilies are" $allowedValues) }}
+      {{- end }}
+    {{- end }}
   ipFamilies: {{ toYaml . | nindent 4}}
   {{- end }}
   selector: {{- include "traefik-hub.labelselector" $ | nindent 4 }}

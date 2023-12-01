@@ -125,3 +125,17 @@ tests:
       - equal:
           path: spec.ipFamilies
           value: [ "IPv6" ]
+  - it: should fail with invalid values on ipFamilyPolicy
+    set:
+      service:
+        ipFamilyPolicy: InvalidValue
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Allowed values on service.ipFamilyPolicy are [SingleStack PreferDualStack RequireDualStack]"
+  - it: should fail with invalid values on ipFamilies
+    set:
+      service:
+        ipFamilies: [ "IPv4", "IPv5" ]
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Allowed values on service.ipFamilies are [IPv4 IPv6]"
