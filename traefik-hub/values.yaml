@@ -55,7 +55,7 @@ plugins: []
 ## Customize Traefik Providers
 ##  - https://doc.traefik.io/traefik/providers/kubernetes-crd
 ##  - https://doc.traefik.io/traefik/providers/kubernetes-ingress
-## On Traefik Hub, `allowCrossNamespace`, `allowEmptyServices` 
+## On Traefik Hub, `allowCrossNamespace`, `allowEmptyServices`
 ## and `allowExternalNameServices` are set to true.
 providers:
   kubernetesCRD:
@@ -78,4 +78,3 @@ providers:
       ip:
       publishedService:
     throttleDuration:
-
