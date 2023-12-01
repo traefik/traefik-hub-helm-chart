@@ -6,13 +6,56 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
   {{- include "traefik-hub.labels" . | nindent 4 }}
+{{- with.Values.service }}
+  {{- with .extraLabels }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
   annotations:
-  {{- with .Values.service.annotations }}
-  {{ toYaml . | indent 2 }}
+  {{- with .annotations }}
+  {{ toYaml . | indent 4 }}
   {{- end }}
 spec:
-  type: {{ .Values.service.type }}
-  loadBalancerClass: {{ .Values.service.loadBalancerClass }}
-  selector:
-     {{- include "traefik-hub.labelselector" . | nindent 6 }}
-  ports: {{ toYaml .Values.service.ports | nindent 4 }}
+  type: {{ .type }}
+  {{- if hasKey . "allocateLoadBalancerNodePorts" }}
+  allocateLoadBalancerNodePorts: {{ .allocateLoadBalancerNodePorts }}
+  {{- end }}
+  {{- with .clusterIP }}
+  clusterIP: {{ . }}
+  {{- end }}
+  {{- with .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .loadBalancerClass }}
+  loadBalancerClass: {{ . }}
+  {{- end }}
+  {{- with .loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- with .loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{ toYaml . | nindent 4}}
+  {{- end }}
+  {{- with .externalIPs }}
+  externalIPs: {{ toYaml . | nindent 4}}
+  {{- end }}
+  {{- with .ipFamilyPolicy }}
+    {{- $allowedValues := list "SingleStack" "PreferDualStack" "RequireDualStack" }}
+    {{- if not (has . $allowedValues) }}
+      {{- fail (cat "ERROR: Allowed values on service.ipFamilyPolicy are" $allowedValues) }}
+    {{- end }}
+  ipFamilyPolicy: {{ . }}
+  {{- end }}
+  {{- with .ipFamilies}}
+    {{- $allowedValues := list "IPv4" "IPv6" }}
+    {{- range $key, $val := . }}
+      {{- if not (has $val $allowedValues) }}
+      {{- fail (cat "ERROR: Allowed values on service.ipFamilies are" $allowedValues) }}
+      {{- end }}
+    {{- end }}
+  ipFamilies: {{ toYaml . | nindent 4}}
+  {{- end }}
+  selector: {{- include "traefik-hub.labelselector" $ | nindent 4 }}
+  ports: {{ toYaml .ports | nindent 4 }}
+{{- end }}
