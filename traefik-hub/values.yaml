@@ -27,11 +27,13 @@ additionalArguments: []
 additionalEnvVars: []
 additionalLabels: {}
 
-## Service used in front of Traefik Hub
-## See https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
+## extra Volume to add on Deployment.
+## See https://kubernetes.io/docs/concepts/storage/volumes/
 extraVolumes: []
 extraVolumeMounts: []
 
+## Service used in front of Traefik Hub
+## See https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
 service:
   type: ClusterIP
   annotations: {}
