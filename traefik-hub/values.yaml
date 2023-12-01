@@ -19,28 +19,6 @@ resources: {}
 #    memory: 128Mi
 #    cpu: 500m
 
-providers:
-  kubernetesCRD:
-    endpoint:
-    token:
-    certAuthFilePath:
-    namespaces: []
-    labelselector:
-    ingressClass:
-    throttleDuration:
-  kubernetesIngress:
-    endpoint:
-    token:
-    certAuthFilePath:
-    namespaces: []
-    labelselector:
-    ingressClass:
-    ingressEndpoint:
-      hostname:
-      ip:
-      publishedService:
-    throttleDuration:
-
 # configure your hubToken with --set hubTokenSecretName=mySecret
 # kubectl create secret generic mySecret --namespace traefik --from-literal=token=xxx
 hubTokenSecretName: "hub-agent-token"
@@ -65,8 +43,36 @@ service:
       name: websecure
       targetPort: websecure
 
-# use it to load plugins
+## use it to load plugins
 plugins: []
 # - name: crowdsec-bouncer-traefik-plugin
 #   moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
 #   version: v1.1.15
+
+## Customize Traefik Providers
+##  - https://doc.traefik.io/traefik/providers/kubernetes-crd
+##  - https://doc.traefik.io/traefik/providers/kubernetes-ingress
+## On Traefik Hub, `allowCrossNamespace`, `allowEmptyServices` 
+## and `allowExternalNameServices` are set to true.
+providers:
+  kubernetesCRD:
+    endpoint:
+    token:
+    certAuthFilePath:
+    namespaces:
+    labelselector:
+    ingressClass:
+    throttleDuration:
+  kubernetesIngress:
+    endpoint:
+    token:
+    certAuthFilePath:
+    namespaces:
+    labelselector:
+    ingressClass:
+    ingressEndpoint:
+      hostname:
+      ip:
+      publishedService:
+    throttleDuration:
+
