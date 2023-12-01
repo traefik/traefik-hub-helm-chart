@@ -27,6 +27,9 @@ additionalArguments: []
 additionalEnvVars: []
 additionalLabels: {}
 
+extraVolumes: []
+extraVolumeMounts: []
+
 service:
   # common use:
   # type: LoadBalancer

@@ -222,6 +222,9 @@ spec:
             - name: plugins
               mountPath: /plugins-storage
             {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
       securityContext:
         fsGroup: 65532
       volumes:
@@ -232,4 +235,7 @@ spec:
         {{- if ne (len .Values.plugins) 0 }}
         - name: plugins
           emptyDir: { }
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}

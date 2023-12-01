@@ -232,3 +232,24 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: --providers.kubernetesingress.throttleduration="10h"
+  - it: should add and mount an extraVolume when set
+    set:
+      extraVolumes:
+        - name: certificates
+          secret:
+            secretNames: certificates
+      extraVolumeMounts:
+        - name: certificates
+          mountPath: /etc/traefik-hub/certs
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: certificates
+            secret:
+              secretNames: certificates
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: certificates
+            mountPath: /etc/traefik-hub/certs
