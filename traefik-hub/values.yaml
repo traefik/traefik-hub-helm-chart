@@ -1,7 +1,7 @@
 replicas: 1
 maxSurge: 1
 
-# On production system, you may want to set it to "system-cluster-critical"
+## On production system, you may want to set it to "system-cluster-critical"
 priorityClassName: ""
 
 imagePullSecrets: []
@@ -19,21 +19,34 @@ resources: {}
 #    memory: 128Mi
 #    cpu: 500m
 
-# configure your hubToken with --set hubTokenSecretName=mySecret
-# kubectl create secret generic mySecret --namespace traefik --from-literal=token=xxx
+## configure your hubToken with --set hubTokenSecretName=mySecret
+## kubectl create secret generic mySecret --namespace traefik --from-literal=token=xxx
 hubTokenSecretName: "hub-agent-token"
 
 additionalArguments: []
 additionalEnvVars: []
 additionalLabels: {}
 
+
+## Service used in front of Traefik Hub
+## See https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
 service:
-  # common use:
-  # type: LoadBalancer
-  # loadBalancerClass: service.k8s.aws/nlb
   type: ClusterIP
-  # e.g. you can here define some external DNS or aws-load-balancer annotations
   annotations: {}
+  externalTrafficPolicy:
+  internalTrafficPolicy:
+  extraLabels: {}
+  loadBalancerClass:
+  loadBalancerIP:
+  clusterIP:
+  externalIPs: []
+  loadBalancerSourceRanges: []
+  allocateLoadBalancerNodePorts:
+  ## Valid values: SingleStack, PreferDualStack, RequireDualStack
+  ipFamilyPolicy:
+  ## Valid values: IPv4, IPv6
+  ipFamilies: []
+
   # Can be customized with, for instance, specific nodePort
   ports:
     - port: 80
