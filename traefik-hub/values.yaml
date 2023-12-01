@@ -27,9 +27,11 @@ additionalArguments: []
 additionalEnvVars: []
 additionalLabels: {}
 
-
 ## Service used in front of Traefik Hub
 ## See https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
+extraVolumes: []
+extraVolumeMounts: []
+
 service:
   type: ClusterIP
   annotations: {}

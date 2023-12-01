@@ -148,7 +148,8 @@ spec:
                   name:
                     type: string
                   openApiSpec:
-                    description: OpenAPISpec defines the OpenAPI spec of an API.
+                    description: OpenAPISpec is optional, an API can be exposed without
+                      an OAS spec.
                     properties:
                       path:
                         type: string
