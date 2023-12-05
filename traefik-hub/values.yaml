@@ -77,7 +77,7 @@ providers:
     token:
     certAuthFilePath:
     namespaces:
-    labelselector:
+    labelSelector:
     ingressClass:
     throttleDuration:
   kubernetesIngress:
@@ -85,7 +85,7 @@ providers:
     token:
     certAuthFilePath:
     namespaces:
-    labelselector:
+    labelSelector:
     ingressClass:
     ingressEndpoint:
       hostname:

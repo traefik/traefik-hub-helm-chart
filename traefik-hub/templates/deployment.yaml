@@ -93,7 +93,7 @@ spec:
             {{- with .kubernetesCRD.namespaces }}
             - --providers.kubernetescrd.namespaces="{{ . }}"
             {{- end }}
-            {{- with .kubernetesCRD.labelselector }}
+            {{- with .kubernetesCRD.labelSelector }}
             - --providers.kubernetescrd.labelselector="{{ . }}"
             {{- end }}
             {{- with .kubernetesCRD.throttleDuration }}
@@ -111,7 +111,7 @@ spec:
             {{- with .kubernetesIngress.namespaces }}
             - --providers.kubernetesingress.namespaces="{{ . }}"
             {{- end }}
-            {{- with .kubernetesIngress.labelselector }}
+            {{- with .kubernetesIngress.labelSelector }}
             - --providers.kubernetesingress.labelselector="{{ . }}"
             {{- end }}
             {{- with .kubernetesIngress.ingressClass }}

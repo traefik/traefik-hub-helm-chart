@@ -168,7 +168,7 @@ tests:
           token: "xxx"
           certAuthFilePath: "/var/crds.pem"
           namespaces: "ns1,ns2"
-          labelselector: "foo=bar"
+          labelSelector: "foo=bar"
           ingressClass: "crd"
           throttleDuration: "10s"
         kubernetesIngress:
@@ -176,7 +176,7 @@ tests:
           token: "yyy"
           certAuthFilePath: "/var/ings.pem"
           namespaces: "ns3,ns4"
-          labelselector: "bar=foo"
+          labelSelector: "bar=foo"
           ingressClass: "ing"
           ingressEndpoint:
             hostname: "ing.tld"
