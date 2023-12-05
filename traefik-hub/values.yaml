@@ -72,7 +72,7 @@ plugins: []
 ## On Traefik Hub, `allowCrossNamespace`, `allowEmptyServices`
 ## and `allowExternalNameServices` are set to true.
 providers:
-  ## Create a defaullt IngressClass and apply it on both providers
+  ## Create a default IngressClass and apply it on both providers
   ingressClass:
     enabled: true
     isDefaultClass: true
