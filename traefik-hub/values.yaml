@@ -51,7 +51,7 @@ service:
   ## Valid values: IPv4, IPv6
   ipFamilies: []
 
-  # Can be customized with, for instance, specific nodePort
+  ## Can be customized with, for instance, specific nodePort
   ports:
     - port: 80
       name: web
@@ -72,13 +72,17 @@ plugins: []
 ## On Traefik Hub, `allowCrossNamespace`, `allowEmptyServices`
 ## and `allowExternalNameServices` are set to true.
 providers:
+  ## Create a defaullt IngressClass and apply it on both providers
+  ingressClass:
+    enabled: true
+    isDefaultClass: true
+    name:
   kubernetesCRD:
     endpoint:
     token:
     certAuthFilePath:
     namespaces:
     labelSelector:
-    ingressClass:
     throttleDuration:
   kubernetesIngress:
     endpoint:
@@ -86,7 +90,6 @@ providers:
     certAuthFilePath:
     namespaces:
     labelSelector:
-    ingressClass:
     ingressEndpoint:
       hostname:
       ip:
