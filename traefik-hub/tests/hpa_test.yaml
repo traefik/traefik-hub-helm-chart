@@ -1,0 +1,86 @@
+suite: HPA tests
+release:
+  name: traefik-hub
+  namespace: traefik
+templates:
+  - hpa.yaml
+tests:
+  - it: should not render HPA by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should render HPA with only maxReplicas set
+    set:
+      autoscaling:
+        maxReplicas: 5
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - isAPIVersion:
+          of: autoscaling/v2
+      - isNull:
+          path: spec.metrics
+      - isNull:
+          path: spec.behavior
+      - isNull:
+          path: spec.minReplicas
+  - it: should set the namespace
+    release:
+      namespace: test
+    set:
+      autoscaling:
+        maxReplicas: 5
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: test
+  - it: hpa should be customizable
+    set:
+      autoscaling:
+        minReplicas: 2
+        maxReplicas: 5
+        metrics:
+          - type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 60
+          - type: Resource
+            resource:
+              name: memory
+              target:
+                type: Utilization
+                averageUtilization: 60
+        behavior:
+          scaleDown:
+            stabilizationWindowSeconds: 300
+            policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 60
+    asserts:
+      - equal:
+          path: spec.minReplicas
+          value: 2
+      - equal:
+          path: spec.maxReplicas
+          value: 5
+      - contains:
+          path: spec.metrics
+          content:
+            type: Resource
+            resource:
+              name: memory
+              target:
+                type: Utilization
+                averageUtilization: 60
+      - isSubset:
+          path: spec.behavior
+          content:
+            scaleDown:
+              stabilizationWindowSeconds: 300
+              policies:
+              - type: Pods
+                value: 1
+                periodSeconds: 60
