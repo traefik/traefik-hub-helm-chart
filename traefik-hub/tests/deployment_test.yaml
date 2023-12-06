@@ -61,7 +61,7 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.template.spec.containers[0].args
-          count: 15
+          count: 17
       - contains:
           path: spec.template.spec.containers[0].args
           content: ic
@@ -160,6 +160,76 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[0].name
           value: regcred
+  - it: should set providers settings
+    set:
+      providers:
+        kubernetesCRD:
+          endpoint: "local.tld"
+          token: "xxx"
+          certAuthFilePath: "/var/crds.pem"
+          namespaces: "ns1,ns2"
+          labelSelector: "foo=bar"
+          throttleDuration: "10s"
+        kubernetesIngress:
+          endpoint: "local2.tld"
+          token: "yyy"
+          certAuthFilePath: "/var/ings.pem"
+          namespaces: "ns3,ns4"
+          labelSelector: "bar=foo"
+          ingressEndpoint:
+            hostname: "ing.tld"
+            ip: "1.2.3.4"
+            publishedService: "ns/svc"
+          throttleDuration: "10h"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.endpoint="local.tld"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.token="xxx"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.certauthfilepath="/var/crds.pem"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.namespaces="ns1,ns2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.labelselector="foo=bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.throttleduration="10s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.endpoint="local2.tld"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.token="yyy"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.certauthfilepath="/var/ings.pem"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.namespaces="ns3,ns4"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.labelselector="bar=foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.ingressclass="traefik-hub"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.ingressendpoint.hostname="ing.tld"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.ingressendpoint.ip="1.2.3.4"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.ingressendpoint.publishedservice="ns/svc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.throttleduration="10h"
   - it: should add and mount an extraVolume when set
     set:
       extraVolumes:
