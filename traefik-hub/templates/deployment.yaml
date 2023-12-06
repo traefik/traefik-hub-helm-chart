@@ -82,6 +82,59 @@ spec:
             - --providers.kubernetesCRD.allowExternalNameServices=true
             - --providers.kubernetesIngress.allowEmptyServices=true
             - --providers.kubernetesIngress.allowExternalNameServices=true
+            {{- with .Values.providers }}
+            {{- with .kubernetesCRD.endpoint }}
+            - --providers.kubernetescrd.endpoint="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesCRD.token }}
+            - --providers.kubernetescrd.token="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesCRD.certAuthFilePath }}
+            - --providers.kubernetescrd.certauthfilepath="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesCRD.namespaces }}
+            - --providers.kubernetescrd.namespaces="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesCRD.labelSelector }}
+            - --providers.kubernetescrd.labelselector="{{ . }}"
+            {{- end }}
+            {{- if .ingressClass.enabled }}
+            - --providers.kubernetescrd.ingressclass="{{ .ingressClass.name | default (include "traefik-hub.name" $) }}"
+            {{- end }}
+            {{- with .kubernetesCRD.throttleDuration }}
+            - --providers.kubernetescrd.throttleduration="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesIngress.endpoint }}
+            - --providers.kubernetesingress.endpoint="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesIngress.token }}
+            - --providers.kubernetesingress.token="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesIngress.certAuthFilePath }}
+            - --providers.kubernetesingress.certauthfilepath="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesIngress.namespaces }}
+            - --providers.kubernetesingress.namespaces="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesIngress.labelSelector }}
+            - --providers.kubernetesingress.labelselector="{{ . }}"
+            {{- end }}
+            {{- if .ingressClass.enabled }}
+            - --providers.kubernetesingress.ingressclass="{{ .ingressClass.name | default (include "traefik-hub.name" $) }}"
+            {{- end }}
+            {{- with .kubernetesIngress.ingressEndpoint.hostname }}
+            - --providers.kubernetesingress.ingressendpoint.hostname="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesIngress.ingressEndpoint.ip }}
+            - --providers.kubernetesingress.ingressendpoint.ip="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesIngress.ingressEndpoint.publishedService }}
+            - --providers.kubernetesingress.ingressendpoint.publishedservice="{{ . }}"
+            {{- end }}
+            {{- with .kubernetesIngress.throttleDuration }}
+            - --providers.kubernetesingress.throttleduration="{{ . }}"
+            {{- end }}
+            {{- end }}
             {{- with $additionnalArgs }}
               {{- toYaml . | nindent 12 }}
             {{- end }}

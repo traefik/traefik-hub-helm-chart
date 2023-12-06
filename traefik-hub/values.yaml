@@ -54,7 +54,7 @@ service:
   ## Valid values: IPv4, IPv6
   ipFamilies: []
 
-  # Can be customized with, for instance, specific nodePort
+  ## Can be customized with, for instance, specific nodePort
   ports:
     - port: 80
       name: web
@@ -71,8 +71,38 @@ autoscaling:
   metrics:
   behavior:
 
-# use it to load plugins
+## use it to load plugins
 plugins: []
 # - name: crowdsec-bouncer-traefik-plugin
 #   moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
 #   version: v1.1.15
+
+## Customize Traefik Providers
+##  - https://doc.traefik.io/traefik/providers/kubernetes-crd
+##  - https://doc.traefik.io/traefik/providers/kubernetes-ingress
+## On Traefik Hub, `allowCrossNamespace`, `allowEmptyServices`
+## and `allowExternalNameServices` are set to true.
+providers:
+  ## Create a default IngressClass and apply it on both providers
+  ingressClass:
+    enabled: true
+    isDefaultClass: true
+    name:
+  kubernetesCRD:
+    endpoint:
+    token:
+    certAuthFilePath:
+    namespaces:
+    labelSelector:
+    throttleDuration:
+  kubernetesIngress:
+    endpoint:
+    token:
+    certAuthFilePath:
+    namespaces:
+    labelSelector:
+    ingressEndpoint:
+      hostname:
+      ip:
+      publishedService:
+    throttleDuration:
