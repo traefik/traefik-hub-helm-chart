@@ -13,7 +13,9 @@ metadata:
   labels:
   {{- include "traefik-hub.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicas }}
+  {{- with .Values.replicas }}
+  replicas: {{ . }}
+  {{- end }}
   selector:
     matchLabels:
      {{- include "traefik-hub.labelselector" . | nindent 6 }}
