@@ -77,11 +77,11 @@ spec:
             - --hub.token=$(HUB_TOKEN)
             - --metrics.prometheus.entryPoint=metrics
             - --ping.entrypoint=traefik
-            - --providers.kubernetesCRD.allowCrossNamespace=true
-            - --providers.kubernetesCRD.allowEmptyServices=true
-            - --providers.kubernetesCRD.allowExternalNameServices=true
-            - --providers.kubernetesIngress.allowEmptyServices=true
-            - --providers.kubernetesIngress.allowExternalNameServices=true
+            - --providers.kubernetescrd.allowCrossNamespace=true
+            - --providers.kubernetescrd.allowEmptyServices=true
+            - --providers.kubernetescrd.allowExternalNameServices=true
+            - --providers.kubernetesingress.allowEmptyServices=true
+            - --providers.kubernetesingress.allowExternalNameServices=true
             {{- with .Values.providers }}
             {{- with .kubernetesCRD.endpoint }}
             - --providers.kubernetescrd.endpoint="{{ . }}"
