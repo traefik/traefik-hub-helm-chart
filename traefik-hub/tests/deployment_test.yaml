@@ -9,6 +9,9 @@ tests:
     asserts:
       - isKind:
           of: Deployment
+      - equal:
+          path: metadata.name
+          value: traefik-hub
   - it: should set the image
     set:
       image: test

@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "traefik-hub.name" -}}
-{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -26,11 +26,17 @@ Create chart name and version as used by the chart label.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Expand the serviceAccountName to use for RBAC and the deployment.
+*/}}
+{{- define "traefik-hub.serviceaccount-name" -}}
+{{- .Values.serviceAccountName | default (include "traefik-hub.name" .) -}}
+{{- end -}}
 
 {{/* Shared labels used for selector */}}
 {{/* This is an immutable field: this should not change between upgrade */}}
 {{- define "traefik-hub.labelselector" -}}
-app.kubernetes.io/name: {{ template "traefik-hub.name" . }}
+app.kubernetes.io/name: {{ .Chart.Name }}
 app.kubernetes.io/instance: {{ template "traefik-hub.instance-name" . }}
 {{- end }}
 
