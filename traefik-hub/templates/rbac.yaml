@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: traefik-hub-controller
+  name: {{ include "traefik-hub.instance-name" . }}
 rules:
   - apiGroups:
       - networking.k8s.io

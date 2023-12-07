@@ -8,7 +8,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: traefik
+  name: {{ include "traefik-hub.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
   {{- include "traefik-hub.labels" . | nindent 4 }}
@@ -38,7 +38,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ .Values.serviceAccountName }}
+      serviceAccountName: {{ include "traefik-hub.serviceaccount-name" . }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
