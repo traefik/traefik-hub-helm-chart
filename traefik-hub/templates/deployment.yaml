@@ -98,8 +98,8 @@ spec:
             {{- with .kubernetesCRD.labelSelector }}
             - --providers.kubernetescrd.labelselector="{{ . }}"
             {{- end }}
-            {{- if .ingressClass.enabled }}
-            - --providers.kubernetescrd.ingressclass="{{ .ingressClass.name | default (include "traefik-hub.name" $) }}"
+            {{- with .kubernetesCRD.ingressClass }}
+            - --providers.kubernetescrd.ingressclass="{{ . }}"
             {{- end }}
             {{- with .kubernetesCRD.throttleDuration }}
             - --providers.kubernetescrd.throttleduration="{{ . }}"
@@ -119,8 +119,8 @@ spec:
             {{- with .kubernetesIngress.labelSelector }}
             - --providers.kubernetesingress.labelselector="{{ . }}"
             {{- end }}
-            {{- if .ingressClass.enabled }}
-            - --providers.kubernetesingress.ingressclass="{{ .ingressClass.name | default (include "traefik-hub.name" $) }}"
+            {{- with .kubernetesIngress.ingressClass }}
+            - --providers.kubernetesingress.ingressclass="{{ . }}"
             {{- end }}
             {{- with .kubernetesIngress.ingressEndpoint.hostname }}
             - --providers.kubernetesingress.ingressendpoint.hostname="{{ . }}"

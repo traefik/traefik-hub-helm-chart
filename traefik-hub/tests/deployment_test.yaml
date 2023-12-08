@@ -61,7 +61,7 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.template.spec.containers[0].args
-          count: 17
+          count: 15
       - contains:
           path: spec.template.spec.containers[0].args
           content: ic
@@ -164,6 +164,7 @@ tests:
           certAuthFilePath: "/var/crds.pem"
           namespaces: "ns1,ns2"
           labelSelector: "foo=bar"
+          ingressClass: "mycrding"
           throttleDuration: "10s"
         kubernetesIngress:
           endpoint: "local2.tld"
@@ -171,6 +172,7 @@ tests:
           certAuthFilePath: "/var/ings.pem"
           namespaces: "ns3,ns4"
           labelSelector: "bar=foo"
+          ingressClass: "mying"
           ingressEndpoint:
             hostname: "ing.tld"
             ip: "1.2.3.4"
@@ -194,6 +196,9 @@ tests:
           content: --providers.kubernetescrd.labelselector="foo=bar"
       - contains:
           path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.ingressclass="mycrding"
+      - contains:
+          path: spec.template.spec.containers[0].args
           content: --providers.kubernetescrd.throttleduration="10s"
       - contains:
           path: spec.template.spec.containers[0].args
@@ -212,7 +217,7 @@ tests:
           content: --providers.kubernetesingress.labelselector="bar=foo"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: --providers.kubernetesingress.ingressclass="traefik-hub"
+          content: --providers.kubernetesingress.ingressclass="mying"
       - contains:
           path: spec.template.spec.containers[0].args
           content: --providers.kubernetesingress.ingressendpoint.hostname="ing.tld"
