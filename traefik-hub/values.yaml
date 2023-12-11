@@ -85,7 +85,7 @@ plugins: []
 providers:
   ingressClass:
     ## Setting the name creates an IngressClass.
-    ## For using it, the name should also be set on providers configuration below
+    ## To use it, the name should also be set on providers configuration below
     name:
     isDefaultClass: true
   kubernetesCRD:
