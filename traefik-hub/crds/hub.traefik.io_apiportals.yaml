@@ -64,16 +64,15 @@ spec:
                       namespace:
                         type: string
                       port:
-                        description: port of the referenced service. A port name and
+                        description: Port of the referenced service. A port name and
                           port number is required for an UIServiceBackendPort.
                         properties:
                           name:
-                            description: name is the name of the port on the Service.
-                              This must be an IANA_SVC_NAME (following RFC6335). This
-                              is a mutually exclusive setting with "Number".
+                            description: Name is the name of the port on the Service.
+                              This is a mutually exclusive setting with "Number".
                             type: string
                           number:
-                            description: number is the numerical port number (e.g.
+                            description: Number is the numerical port number (e.g.
                               80) on the Service. This is a mutually exclusive setting
                               with "Name".
                             format: int32
