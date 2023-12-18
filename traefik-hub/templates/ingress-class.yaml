@@ -1,11 +1,9 @@
-{{- if .Values.providers.ingressClass.name -}}
+{{- if .Values.ingressClass.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  annotations:
-    ingressclass.kubernetes.io/is-default-class: {{ .Values.providers.ingressClass.isDefaultClass | quote }}
   labels: {{- include "traefik-hub.labels" . | nindent 4 }}
-  name: {{ .Values.providers.ingressClass.name }}
+  name: {{ include "traefik-hub.name" . }}
 spec:
   controller: hub.traefik.io/ingress-controller
 {{- end }}
