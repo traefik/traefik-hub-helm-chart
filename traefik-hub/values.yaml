@@ -77,7 +77,6 @@ plugins: []
 #   moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
 #   version: v1.1.15
 
-
 ## Create a default IngressClass and apply it on both k8s providers
 ingressClass:
   enabled: false
