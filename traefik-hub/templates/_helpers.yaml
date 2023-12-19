@@ -19,7 +19,6 @@ Allow customization of the ingressClass name.
 {{- .Values.ingressClass.name | default (include "traefik-hub.name" .) -}}
 {{- end -}}
 
-
 {{/*
 Create chart name and version as used by the chart label.
 */}}
