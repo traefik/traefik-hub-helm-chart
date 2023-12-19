@@ -230,6 +230,22 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: --providers.kubernetesingress.throttleduration="10h"
+  - it: should set custom out-chart ingressClass
+    set:
+      ingressClass:
+        enabled: false
+      providers:
+        kubernetesCRD:
+          ingressClass: foo
+        kubernetesIngress:
+          ingressClass: bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.ingressclass="foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.ingressclass="bar"
   - it: should add and mount an extraVolume when set
     set:
       extraVolumes:

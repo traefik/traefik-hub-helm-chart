@@ -81,6 +81,7 @@ plugins: []
 ## Create a default IngressClass and apply it on both k8s providers
 ingressClass:
   enabled: false
+  name:
 
 ## Customize Traefik Providers
 ##  - https://doc.traefik.io/traefik/providers/kubernetes-crd
@@ -94,6 +95,7 @@ providers:
     certAuthFilePath:
     namespaces:
     labelSelector:
+    ingressClass:
     throttleDuration:
   kubernetesIngress:
     endpoint:
@@ -101,6 +103,7 @@ providers:
     certAuthFilePath:
     namespaces:
     labelSelector:
+    ingressClass:
     ingressEndpoint:
       hostname:
       ip:
