@@ -169,6 +169,15 @@ spec:
                 items:
                   type: string
                 type: array
+              operationFilter:
+                description: OperationFilter filters the operations available on a
+                  set of APIs using OperationSets.
+                properties:
+                  include:
+                    items:
+                      type: string
+                    type: array
+                type: object
             type: object
           status:
             description: The current status of this APIAccess.
