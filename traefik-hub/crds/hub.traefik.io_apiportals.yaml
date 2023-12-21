@@ -102,6 +102,23 @@ spec:
                 description: HubDomain is the hub generated domain of the APIPortal
                   WebUI.
                 type: string
+              oidc:
+                description: OIDC is the OIDC configuration for accessing the exposed
+                  APIPortal WebUI.
+                properties:
+                  clientId:
+                    description: OIDCClientID is the OIDC clientID for accessing the
+                      exposed APIPortal WebUI.
+                    type: string
+                  issuer:
+                    description: OIDCIssuer is the OIDC issuer for accessing the exposed
+                      APIPortal WebUI.
+                    type: string
+                  secretName:
+                    description: SecretName is the name of the secret containing the
+                      OIDC clientSecret for accessing the exposed APIPortal WebUI.
+                    type: string
+                type: object
               syncedAt:
                 format: date-time
                 type: string
