@@ -152,9 +152,6 @@ spec:
             {{- end }}
           {{- end }}
           env:
-            # TODO: remove this when new traefik-hub version will be released
-            - name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
-              value: "true"
             - name: HUB_TOKEN
               valueFrom:
                 secretKeyRef:
