@@ -73,12 +73,7 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.template.spec.containers[0].env
-          count: 4
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
-            value: "true"
+          count: 3
       - contains:
           path: spec.template.spec.containers[0].env
           content:
