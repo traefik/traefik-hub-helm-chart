@@ -1,5 +1,5 @@
 # Used for Helm Chart
-IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.13.1-0.3.6
+IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.13.3-0.3.6
 IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.10.1
 
 traefik-hub/tests/__snapshot__:
