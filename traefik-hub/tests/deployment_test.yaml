@@ -246,6 +246,18 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: --providers.kubernetesingress.ingressclass="bar"
+  - it: should set custom name inchart ingressClass on both providers
+    set:
+      ingressClass:
+        enabled: true
+        name: mying
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetescrd.ingressclass="mying"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesingress.ingressclass="mying"
   - it: should add and mount an extraVolume when set
     set:
       extraVolumes:
