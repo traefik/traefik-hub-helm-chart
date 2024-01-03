@@ -77,11 +77,11 @@ spec:
             - --hub.token=$(HUB_TOKEN)
             - --metrics.prometheus.entryPoint=metrics
             - --ping.entrypoint=traefik
-            - --providers.kubernetesCRD.allowCrossNamespace=true
-            - --providers.kubernetesCRD.allowEmptyServices=true
-            - --providers.kubernetesCRD.allowExternalNameServices=true
-            - --providers.kubernetesIngress.allowEmptyServices=true
-            - --providers.kubernetesIngress.allowExternalNameServices=true
+            - --providers.kubernetescrd.allowCrossNamespace=true
+            - --providers.kubernetescrd.allowEmptyServices=true
+            - --providers.kubernetescrd.allowExternalNameServices=true
+            - --providers.kubernetesingress.allowEmptyServices=true
+            - --providers.kubernetesingress.allowExternalNameServices=true
             {{- with .Values.providers }}
             {{- with .kubernetesCRD.endpoint }}
             - --providers.kubernetescrd.endpoint="{{ . }}"
@@ -98,8 +98,8 @@ spec:
             {{- with .kubernetesCRD.labelSelector }}
             - --providers.kubernetescrd.labelselector="{{ . }}"
             {{- end }}
-            {{- if .ingressClass.enabled }}
-            - --providers.kubernetescrd.ingressclass="{{ .ingressClass.name | default (include "traefik-hub.name" $) }}"
+            {{- if (or .kubernetesCRD.ingressClass $.Values.ingressClass.enabled) }}
+            - --providers.kubernetescrd.ingressclass="{{ .kubernetesCRD.ingressClass | default (include "traefik-hub.ic-name" $) }}"
             {{- end }}
             {{- with .kubernetesCRD.throttleDuration }}
             - --providers.kubernetescrd.throttleduration="{{ . }}"
@@ -119,8 +119,8 @@ spec:
             {{- with .kubernetesIngress.labelSelector }}
             - --providers.kubernetesingress.labelselector="{{ . }}"
             {{- end }}
-            {{- if .ingressClass.enabled }}
-            - --providers.kubernetesingress.ingressclass="{{ .ingressClass.name | default (include "traefik-hub.name" $) }}"
+            {{- if (or .kubernetesIngress.ingressClass $.Values.ingressClass.enabled) }}
+            - --providers.kubernetesingress.ingressclass="{{ .kubernetesIngress.ingressClass | default (include "traefik-hub.ic-name" $) }}"
             {{- end }}
             {{- with .kubernetesIngress.ingressEndpoint.hostname }}
             - --providers.kubernetesingress.ingressendpoint.hostname="{{ . }}"

@@ -77,23 +77,24 @@ plugins: []
 #   moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
 #   version: v1.1.15
 
+## Create an IngressClass and use it on both k8s providers.
+ingressClass:
+  enabled: false
+  name:
+
 ## Customize Traefik Providers
 ##  - https://doc.traefik.io/traefik/providers/kubernetes-crd
 ##  - https://doc.traefik.io/traefik/providers/kubernetes-ingress
 ## On Traefik Hub, `allowCrossNamespace`, `allowEmptyServices`
 ## and `allowExternalNameServices` are set to true.
 providers:
-  ## Create a default IngressClass and apply it on both providers
-  ingressClass:
-    enabled: true
-    isDefaultClass: true
-    name:
   kubernetesCRD:
     endpoint:
     token:
     certAuthFilePath:
     namespaces:
     labelSelector:
+    ingressClass:
     throttleDuration:
   kubernetesIngress:
     endpoint:
@@ -101,6 +102,7 @@ providers:
     certAuthFilePath:
     namespaces:
     labelSelector:
+    ingressClass:
     ingressEndpoint:
       hostname:
       ip:
