@@ -120,7 +120,7 @@ spec:
             - --providers.kubernetesingress.labelselector="{{ . }}"
             {{- end }}
             {{- if (or .kubernetesIngress.ingressClass $.Values.ingressClass.enabled) }}
-            - --providers.kubernetesingress.ingressclass="{{ .kubernetesIngress.ingressClass | default (include "traefik-hub.name" $) }}"
+            - --providers.kubernetesingress.ingressclass="{{ .kubernetesIngress.ingressClass | default (include "traefik-hub.ic-name" $) }}"
             {{- end }}
             {{- with .kubernetesIngress.ingressEndpoint.hostname }}
             - --providers.kubernetesingress.ingressendpoint.hostname="{{ . }}"
