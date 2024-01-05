@@ -11,12 +11,12 @@ tests:
           of: ClusterRoleBinding
       - equal:
           path: metadata.name
-          value: traefik-hub-controller
+          value: traefik-hub-traefik
       - equal:
           path: subjects[0]
           value:
             kind: ServiceAccount
-            name: traefik-hub-controller
+            name: traefik-hub
             namespace: traefik
   - it: should namespace and serviceAccountName
     set:
