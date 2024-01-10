@@ -8,11 +8,8 @@ maxSurge: 1
 priorityClassName: ""
 
 imagePullSecrets: []
-#   - name: regcred
-
 image: ghcr.io/traefik/traefik-hub:{{ .Chart.AppVersion }}
-serviceAccountName: traefik-hub-controller
-
+serviceAccountName:
 
 resources: {}
 #  requests:
