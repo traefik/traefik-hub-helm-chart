@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik-hub
 description: Traefik Hub Ingress Controller
 type: application
-version: 2.10.0
+version: 3.0.0
 # renovate: image=ghcr.io/traefik/traefik-hub
 appVersion: v2.8.0
 kubeVersion: ">=1.24.0-0"
@@ -23,5 +23,9 @@ maintainers:
 icon: https://doc.traefik.io/traefik-hub/assets/images/logos-traefik-hub-horizontal.svg
 annotations:
   artifacthub.io/changes: |
-    - "feat: upgrade traefik hub to version v2.6.0"
-    - "feat: customizable Service ports"
+    - "fix!: use release name for resources name"
+    - "fix!: IngressClass should not be created by default"
+    - "fix: remove unnecessary rbac"
+    - "chore: upgrade traefik-hub version"
+    - "chore: update CRDs"
+    - "chore: remove unnecessary env var"
