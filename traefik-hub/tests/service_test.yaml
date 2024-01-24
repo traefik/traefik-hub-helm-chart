@@ -42,6 +42,7 @@ tests:
       service:
         annotations:
           key: value
+          key2: value2
         extraLabels:
           foo: bar
     asserts:
@@ -49,6 +50,7 @@ tests:
           path: metadata.annotations
           value:
             key: value
+            key2: value2
       - isSubset:
           path: metadata.labels
           content:
