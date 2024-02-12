@@ -16,4 +16,4 @@ tests:
           value: |2
 
 
-            Traefik Hub 2.3.0 has been deployed successfully on NAMESPACE namespace !
+            Traefik Hub 2.3.0 has been deployed successfully on NAMESPACE namespace!
