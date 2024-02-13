@@ -1,0 +1,3 @@
+
+
+Traefik Hub {{ .Chart.AppVersion }} has been deployed successfully on {{ .Release.Namespace }} namespace!

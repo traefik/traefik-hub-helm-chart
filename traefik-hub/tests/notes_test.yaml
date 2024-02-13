@@ -1,0 +1,19 @@
+suite: NOTES.txt output
+templates:
+  - NOTES.txt
+chart:
+  appVersion: 2.3.0
+capabilities:
+  majorVersion: 1
+  minorVersion: 16
+tests:
+  - it: should display default release notes
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - equalRaw:
+          value: |2
+
+
+            Traefik Hub 2.3.0 has been deployed successfully on NAMESPACE namespace!
