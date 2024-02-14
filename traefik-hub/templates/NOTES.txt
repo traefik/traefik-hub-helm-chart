@@ -11,7 +11,7 @@ Traefik Hub {{ .Chart.AppVersion }} has been deployed successfully on {{ .Releas
  {{- $portsList := regexReplaceAll ", (\\d+)$" $portsArray " and $1" }}
  {{- $portsString := len .ports | plural "port" "ports" }}
  {{- if eq .type "ClusterIP" }}
-ClusterIP Service is listening locally on {{ $portsString }} {{ $portsList }}.
+ClusterIP Service is listening internally on {{ $portsString }} {{ $portsList }}.
  {{- else }}
 {{.type}} Service is exposed on {{ $portsString }} {{ $portsList }}.
  {{- end }}

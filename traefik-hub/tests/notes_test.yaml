@@ -36,7 +36,7 @@ tests:
 
 
             Traefik Hub 2.3.0 has been deployed successfully on NAMESPACE namespace!
-            ClusterIP Service is listening locally on ports 80, 443 and 8443.
+            ClusterIP Service is listening internally on ports 80, 443 and 8443.
   - it: should display NodePort service with 1 port
     set:
       service:
