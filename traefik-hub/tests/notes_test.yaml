@@ -9,11 +9,46 @@ capabilities:
 tests:
   - it: should display default release notes
     set:
-      rbac:
-        namespaced: true
     asserts:
       - equalRaw:
           value: |2
 
 
             Traefik Hub 2.3.0 has been deployed successfully on NAMESPACE namespace!
+            LoadBalancer Service is exposed on ports 80 and 443.
+  - it: should display ClusterIP Service with 3 ports
+    set:
+      service:
+        type: ClusterIP
+        ports:
+          - name: web
+            port: 80
+            targetPort: web
+          - name: websecure
+            port: 443
+            targetPort: websecure
+          - name: grpc
+            port: 8443
+            targetPort: grpc
+    asserts:
+      - equalRaw:
+          value: |2
+
+
+            Traefik Hub 2.3.0 has been deployed successfully on NAMESPACE namespace!
+            ClusterIP Service is listening internally on ports 80, 443 and 8443.
+  - it: should display NodePort service with 1 port
+    set:
+      service:
+        type: NodePort
+        ports:
+          - name: websecure
+            port: 443
+            targetPort: websecure
+    asserts:
+      - equalRaw:
+          value: |2
+
+
+            Traefik Hub 2.3.0 has been deployed successfully on NAMESPACE namespace!
+            NodePort Service is exposed on port 443.

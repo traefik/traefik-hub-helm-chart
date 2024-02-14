@@ -1,3 +1,18 @@
 
 
 Traefik Hub {{ .Chart.AppVersion }} has been deployed successfully on {{ .Release.Namespace }} namespace!
+
+{{- with .Values.service }}
+ {{- $portsList := list }}
+ {{- range .ports }}
+   {{- $portsList = append $portsList .port }}
+ {{- end }}
+ {{- $portsArray := join ", " $portsList }}
+ {{- $portsList := regexReplaceAll ", (\\d+)$" $portsArray " and $1" }}
+ {{- $portsString := len .ports | plural "port" "ports" }}
+ {{- if eq .type "ClusterIP" }}
+ClusterIP Service is listening internally on {{ $portsString }} {{ $portsList }}.
+ {{- else }}
+{{.type}} Service is exposed on {{ $portsString }} {{ $portsList }}.
+ {{- end }}
+{{- end }}

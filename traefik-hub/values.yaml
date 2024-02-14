@@ -35,7 +35,7 @@ extraVolumeMounts: []
 ## Service used in front of Traefik Hub
 ## See https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
 service:
-  type: ClusterIP
+  type: LoadBalancer
   annotations: {}
   externalTrafficPolicy:
   internalTrafficPolicy:
