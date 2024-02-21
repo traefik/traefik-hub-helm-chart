@@ -33,7 +33,7 @@ This chart installs the Traefik Hub agent in *Ingress Controller* mode on a Kube
 ### Prerequisites
 
 1. [x] Helm **v3** [installed](https://helm.sh/docs/using_helm/#installing-helm): `helm version`
-2. [x] TraefikLabs chart repository: `helm repo add traefik https://traefik.github.io/charts`
+2. [x] Traefik Labs chart repository: `helm repo add traefik https://traefik.github.io/charts`
 
 ### Deploying Hub Ingres Controller for Kubernetes
 
