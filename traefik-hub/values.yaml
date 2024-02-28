@@ -7,6 +7,7 @@ maxSurge: 1
 ## On production system, you may want to set it to "system-cluster-critical"
 priorityClassName: ""
 
+imagePullPolicy: IfNotPresent
 imagePullSecrets: []
 image: ghcr.io/traefik/traefik-hub:{{ .Chart.AppVersion }}
 serviceAccountName:
