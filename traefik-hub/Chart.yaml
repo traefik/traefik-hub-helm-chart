@@ -23,7 +23,7 @@ maintainers:
 icon: https://doc.traefik.io/traefik-hub/assets/images/logos-traefik-hub-horizontal.svg
 annotations:
   artifacthub.io/changes: |
-    - docs: add missing helm repo on README
-    - feat!: LoadBalancer Service by default
-    - doc: install notes
-    - fix: Service annotations indent
+    - "docs: add missing helm repo on README"
+    - "feat!: LoadBalancer Service by default"
+    - "doc: install notes"
+    - "fix: Service annotations indent"
