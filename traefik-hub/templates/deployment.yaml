@@ -64,7 +64,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - image: {{ tpl .Values.image $ }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           name: traefik
           args:
             - ic
