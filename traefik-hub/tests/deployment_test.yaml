@@ -282,3 +282,10 @@ tests:
           content:
             name: certificates
             mountPath: /etc/traefik-hub/certs
+  - it: use Always as ImagePullPolicy
+    set:
+      imagePullPolicy: Always
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].imagePullPolicy
+          value: Always
