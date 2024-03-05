@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.12.0
+    controller-gen.kubebuilder.io/version: v0.13.0
   name: apiportals.hub.traefik.io
 spec:
   group: hub.traefik.io
@@ -39,33 +39,48 @@ spec:
             description: The desired behavior of this APIPortal.
             properties:
               apiGateway:
+                description: APIGateway is the APIGateway resource the APIPortal will
+                  render documentation for.
                 type: string
               customDomains:
                 description: CustomDomains are the custom domains under which the
                   portal will be exposed.
                 items:
+                  description: Domain is the domain name.
+                  maxLength: 253
                   type: string
+                  x-kubernetes-validations:
+                  - message: custom domain must be a valid domain name
+                    rule: self.matches(r"""([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]""")
+                maxItems: 20
                 type: array
+                x-kubernetes-validations:
+                - message: duplicate domains
+                  rule: self.all(x, self.exists_one(y, y == x))
               description:
+                description: Description of the APIPortal.
                 type: string
               title:
+                description: Title is the public facing name of the APIPortal.
                 type: string
               ui:
-                description: UISpec configures the UI customization.
+                description: UI holds the UI customization options.
                 properties:
                   logoUrl:
+                    description: LogoURL is the public URL of the logo.
                     type: string
                   service:
-                    description: UIService configures the service to expose on the
-                      edge.
+                    description: Service defines a custom service exposing the UI.
                     properties:
                       name:
+                        description: Name of the Kubernetes Service resource.
                         type: string
                       namespace:
+                        description: Namespace of the Kubernetes Service resource.
                         type: string
                       port:
-                        description: Port of the referenced service. A port name and
-                          port number is required for an UIServiceBackendPort.
+                        description: Port of the referenced service. A port name or
+                          port number is required.
                         properties:
                           name:
                             description: Name is the name of the port on the Service.
@@ -78,6 +93,9 @@ spec:
                             format: int32
                             type: integer
                         type: object
+                        x-kubernetes-validations:
+                        - message: name or number must be defined
+                          rule: has(self.name) || has(self.number)
                     required:
                     - name
                     - port
@@ -107,16 +125,16 @@ spec:
                   APIPortal WebUI.
                 properties:
                   clientId:
-                    description: OIDCClientID is the OIDC clientID for accessing the
-                      exposed APIPortal WebUI.
+                    description: ClientID is the OIDC ClientID for accessing the exposed
+                      APIPortal WebUI.
                     type: string
                   issuer:
-                    description: OIDCIssuer is the OIDC issuer for accessing the exposed
+                    description: Issuer is the OIDC issuer for accessing the exposed
                       APIPortal WebUI.
                     type: string
                   secretName:
                     description: SecretName is the name of the secret containing the
-                      OIDC clientSecret for accessing the exposed APIPortal WebUI.
+                      OIDC ClientSecret for accessing the exposed APIPortal WebUI.
                     type: string
                 type: object
               syncedAt:
