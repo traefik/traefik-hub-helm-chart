@@ -42,7 +42,6 @@ rules:
     verbs:
       - list
   - apiGroups:
-      - traefik.containo.us
       - traefik.io
     resources:
       - middlewares
@@ -54,6 +53,7 @@ rules:
       - tlsoptions
       - tlsstores
       - serverstransports
+      - serverstransporttcps
     verbs:
       - get
       - list
