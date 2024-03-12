@@ -12,7 +12,7 @@ spec:
     listKind: APIRateLimitList
     plural: apiratelimits
     singular: apiratelimit
-  scope: Cluster
+  scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
@@ -35,11 +35,6 @@ spec:
           spec:
             description: The desired behavior of this APIRateLimit.
             properties:
-              anyGroups:
-                description: AnyGroups states that all user groups will by default
-                  be rate limited with this configuration. If an APIRateLimit explicitly
-                  target a group, the default rate limit will be ignored.
-                type: boolean
               apiSelector:
                 description: APISelector selects the APIs that will be rate limited.
                   Multiple APIRateLimits can select the same set of APIs. This field
@@ -93,8 +88,7 @@ spec:
                   Multiple APIRateLimits can select the same APIs. When combined with
                   APISelector, this set of APIs is appended to the matching APIs.
                 items:
-                  description: APIReference contains information to identify an API
-                    to add to an APIAccess, an APICollection or an APIRateLimit.
+                  description: APIReference references an API.
                   properties:
                     name:
                       description: Name of the API.
@@ -115,11 +109,16 @@ spec:
                     && x.__namespace__ != '''' ? x.__namespace__ : ''default'') ==
                     (has(y.__namespace__) && y.__namespace__ != '''' ? y.__namespace__
                     : ''default'')))'
+              everyone:
+                description: Everyone indicates that all users will, by default, be
+                  rate limited with this configuration. If an APIRateLimit explicitly
+                  target a group, the default rate limit will be ignored.
+                type: boolean
               groups:
-                description: Groups are the user groups that will be rate limited.
-                  Multiple APIRateLimits can target the same set of user groups, the
-                  most restrictive one applies. When a user belongs to multiple groups,
-                  the least restrictive APIRateLimit applies.
+                description: Groups are the consumer groups that will be rate limited.
+                  Multiple APIRateLimits can target the same set of consumer groups,
+                  the most restrictive one applies. When a consumer belongs to multiple
+                  groups, the least restrictive APIRateLimit applies.
                 items:
                   type: string
                 type: array
@@ -130,7 +129,7 @@ spec:
                 - message: must be a positive number
                   rule: self >= 0
               period:
-                description: Period is frequency of bucket full refill.
+                description: Period is the unit of time for the Limit.
                 format: duration
                 type: string
                 x-kubernetes-validations:
@@ -138,8 +137,8 @@ spec:
                   rule: self >= duration('1s') && self <= duration('1h')
               strategy:
                 description: Strategy defines how the bucket state will be synchronized
-                  between the different Traefik Hub agent instances. It can be, either
-                  "local" or "distributed".
+                  between the different Traefik Hub instances. It can be, either "local"
+                  or "distributed".
                 enum:
                 - local
                 - distributed
@@ -148,9 +147,9 @@ spec:
             - limit
             type: object
             x-kubernetes-validations:
-            - message: groups and anyGroups are mutually exclusive
-              rule: '(has(self.anyGroups) && has(self.groups)) ? !(self.anyGroups
-                && self.groups.size() > 0) : true'
+            - message: groups and everyone are mutually exclusive
+              rule: '(has(self.everyone) && has(self.groups)) ? !(self.everyone &&
+                self.groups.size() > 0) : true'
           status:
             description: The current status of this APIRateLimit.
             properties:
