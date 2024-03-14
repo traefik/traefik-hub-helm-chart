@@ -1,0 +1,54 @@
+suite: dashboard ingress route tests
+release:
+  name: traefik-hub
+  namespace: traefik
+templates:
+  - dashboard-ingressroute.yaml
+tests:
+  - it: should render a default ingressroute
+    set:
+      ingressRoute.dashboard.enabled: true
+    asserts:
+      - isKind:
+          of: IngressRoute
+      - equal:
+          path: metadata.name
+          value: traefik-hub-dashboard
+      - equal:
+          path: spec.entryPoints
+          value: ["web", "websecure"]
+      - equal:
+          path: spec.routes[0].match
+          value: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+      - notExists:
+          path: spec.routes[0].middlewares
+
+  - it: should render a custom ingressroute
+    set:
+      ingressRoute.dashboard.enabled: true
+      ingressRoute.dashboard.annotations: {"annotation": "test"}
+      ingressRoute.dashboard.labels: {"label": "test"}
+      ingressRoute.dashboard.matchRule: PathPrefix(`/dashboard-path`) || PathPrefix(`/api-path`)
+      ingressRoute.dashboard.entryPoints: ["websecure"]
+      ingressRoute.dashboard.middlewares: ["authmiddleware", "testmiddleware"]
+    asserts:
+      - isKind:
+          of: IngressRoute
+      - equal:
+          path: metadata.name
+          value: traefik-hub-dashboard
+      - equal:
+          path: spec.entryPoints
+          value: ["websecure"]
+      - equal:
+          path: spec.routes[0].match
+          value: PathPrefix(`/dashboard-path`) || PathPrefix(`/api-path`)
+      - equal:
+          path: spec.routes[0].middlewares
+          value: [ "authmiddleware", "testmiddleware" ]
+      - equal:
+          path: metadata.labels.label
+          value: "test"
+      - equal:
+          path: metadata.annotations.annotation
+          value: "test"
