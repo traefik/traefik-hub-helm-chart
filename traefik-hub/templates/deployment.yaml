@@ -82,6 +82,9 @@ spec:
             - --providers.kubernetescrd.allowExternalNameServices=true
             - --providers.kubernetesingress.allowEmptyServices=true
             - --providers.kubernetesingress.allowExternalNameServices=true
+            {{- if .Values.ingressRoute.dashboard.enabled }}
+            - --api=true
+            {{- end }}
             {{- with .Values.providers }}
             {{- with .kubernetesCRD.endpoint }}
             - --providers.kubernetescrd.endpoint="{{ . }}"
