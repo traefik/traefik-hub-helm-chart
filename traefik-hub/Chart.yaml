@@ -20,7 +20,7 @@ maintainers:
     email: michael.matur@traefik.io
   - name: darkweaver87
     email: remi.buisson@traefik.io
-icon: https://doc.traefik.io/traefik-hub/assets/images/logos-traefik-hub-horizontal.svg
+icon: https://doc.traefik.io/traefik-hub/img/ps-traefik-hub-logo-light.svg
 annotations:
   artifacthub.io/changes: |
     - "docs: add missing helm repo on README"
