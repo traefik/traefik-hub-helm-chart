@@ -24,16 +24,10 @@ spec:
     - jsonPath: .spec.release
       name: Release
       type: string
-    - jsonPath: .spec.service.name
-      name: ServiceName
-      type: string
-    - jsonPath: .spec.service.port.number
-      name: ServicePort
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: APIVersion defines an APIVersion.
+        description: APIVersion defines a version of an API.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,84 +44,105 @@ spec:
           spec:
             description: The desired behavior of this APIVersion.
             properties:
-              apiName:
-                description: APIName is the name of the API this version belongs to.
-                type: string
-              cors:
-                description: CORS configures Cross-origin resource sharing headers.
+              openApiSpec:
+                description: OpenAPISpec defines the API contract as an OpenAPI specification.
                 properties:
-                  allowCredentials:
-                    description: AllowCredentials defines whether the request can
-                      include user credentials.
-                    type: boolean
-                  allowHeaders:
-                    description: AllowHeaders defines the Access-Control-Request-Headers
-                      values sent in preflight response.
+                  operationSets:
+                    description: OperationSets defines the sets of operations to be
+                      referenced for granular filtering in APIAccesses.
                     items:
-                      type: string
+                      description: OperationSet gives a name to a set of matching
+                        OpenAPI operations. This set of operations can then be referenced
+                        for granular filtering in APIAccesses.
+                      properties:
+                        matchers:
+                          description: Matchers defines a list of alternative rules
+                            for matching OpenAPI operations.
+                          items:
+                            description: OperationMatcher defines criteria for matching
+                              an OpenAPI operation.
+                            minProperties: 1
+                            properties:
+                              methods:
+                                description: Methods specifies the HTTP methods to
+                                  be included for selection.
+                                items:
+                                  type: string
+                                maxItems: 10
+                                type: array
+                              path:
+                                description: Path specifies the exact path of the
+                                  operations to select.
+                                maxLength: 255
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must start with a '/'
+                                  rule: self.startsWith('/')
+                                - message: cannot contains '../'
+                                  rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                              pathPrefix:
+                                description: PathPrefix specifies the path prefix
+                                  of the operations to select.
+                                maxLength: 255
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must start with a '/'
+                                  rule: self.startsWith('/')
+                                - message: cannot contains '../'
+                                  rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                              pathRegex:
+                                description: PathRegex specifies a regular expression
+                                  pattern for matching operations based on their paths.
+                                type: string
+                            type: object
+                            x-kubernetes-validations:
+                            - message: path, pathPrefix and pathRegex are mutually
+                                exclusive
+                              rule: '[has(self.path), has(self.pathPrefix), has(self.pathRegex)].filter(x,
+                                x).size() <= 1'
+                          maxItems: 100
+                          minItems: 1
+                          type: array
+                        name:
+                          description: Name is the name of the OperationSet to reference
+                            in APIAccesses.
+                          maxLength: 253
+                          type: string
+                      required:
+                      - matchers
+                      - name
+                      type: object
+                    maxItems: 100
                     type: array
-                  allowMethods:
-                    description: AllowMethods defines the Access-Control-Request-Method
-                      values sent in preflight response.
-                    items:
-                      type: string
-                    type: array
-                  allowOriginList:
-                    description: AllowOriginList is a list of allowable origins. Can
-                      also be a wildcard origin "*".
-                    items:
-                      type: string
-                    type: array
-                  allowOriginListRegex:
-                    description: AllowOriginListRegex is a list of allowable origins
-                      written following the Regular Expression syntax (https://golang.org/pkg/regexp/).
-                    items:
-                      type: string
-                    type: array
-                  exposeHeaders:
-                    description: ExposeHeaders defines the Access-Control-Expose-Headers
-                      values sent in preflight response.
-                    items:
-                      type: string
-                    type: array
-                  maxAge:
-                    description: MaxAge defines the time that a preflight request
-                      may be cached.
-                    format: int64
-                    type: integer
+                  path:
+                    description: Path specifies the endpoint path within the Kubernetes
+                      Service where the OpenAPI specification can be obtained. The
+                      Service queried is determined by the associated Ingress, IngressRoute,
+                      or HTTPRoute resource to which the API is attached. It's important
+                      to note that this option is incompatible if the Ingress or IngressRoute
+                      specifies multiple backend services. The Path must be accessible
+                      via a GET request method and should serve a YAML or JSON document
+                      containing the OpenAPI specification.
+                    maxLength: 255
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must start with a '/'
+                      rule: self.startsWith('/')
+                    - message: cannot contains '../'
+                      rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                  url:
+                    description: URL is a Traefik Hub agent accessible URL for obtaining
+                      the OpenAPI specification. The URL must be accessible via a
+                      GET request method and should serve a YAML or JSON document
+                      containing the OpenAPI specification.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid URL
+                      rule: isURL(self)
                 type: object
-              headers:
-                description: Headers manipulates HTTP request and response headers.
-                properties:
-                  request:
-                    description: Request configures the request headers.
-                    properties:
-                      delete:
-                        description: Delete deletes headers.
-                        items:
-                          type: string
-                        type: array
-                      set:
-                        additionalProperties:
-                          type: string
-                        description: Set sets the value of headers
-                        type: object
-                    type: object
-                  response:
-                    description: Response configures the response headers.
-                    properties:
-                      delete:
-                        description: Delete deletes headers.
-                        items:
-                          type: string
-                        type: array
-                      set:
-                        additionalProperties:
-                          type: string
-                        description: Set sets the value of headers
-                        type: object
-                    type: object
-                type: object
+                x-kubernetes-validations:
+                - message: path or url must be defined
+                  rule: has(self.path) || has(self.url)
               release:
                 description: 'Release is the version number of the API. This value
                   must follow the SemVer format: https://semver.org/'
@@ -136,168 +151,9 @@ spec:
                 x-kubernetes-validations:
                 - message: must be a valid semver version
                   rule: self.matches(r"""^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$""")
-              routes:
-                description: Routes defines the different ways of accessing this APIVersion.
-                items:
-                  description: Route determines how to match the version.
-                  properties:
-                    headers:
-                      additionalProperties:
-                        type: string
-                      description: Headers defines the HTTP headers that must be present
-                        in the request to be routed on this APIVersion.
-                      type: object
-                    pathPrefix:
-                      description: PathPrefix defines the path prefix to be routed
-                        to this APIVersion. This PathPrefix is appended to the PathPrefix
-                        of the APICollection and API.
-                      maxLength: 255
-                      type: string
-                      x-kubernetes-validations:
-                      - message: must start with a '/'
-                        rule: self.startsWith('/')
-                      - message: cannot contains '../'
-                        rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
-                    queryParams:
-                      additionalProperties:
-                        type: string
-                      description: QueryParams defines the URL query parameters that
-                        must be present in the request to be routed on this APIVersion.
-                      type: object
-                  type: object
-                maxItems: 10
-                type: array
-              service:
-                description: Service defines the backend handling the incoming traffic.
-                properties:
-                  name:
-                    description: Name is the name of the Kubernetes Service. The Service
-                      must be in the same namespace as the API.
-                    type: string
-                  openApiSpec:
-                    description: OpenAPISpec defines where to obtain the OpenAPI specification
-                      of the Service.
-                    properties:
-                      operationSets:
-                        description: OperationSets defines the sets of operations
-                          that can be used for advanced filtering in APIAccesses.
-                        items:
-                          description: OperationSet selects a set of OpenAPI operations
-                            that can be referenced for advanced filtering on APIAccesses.
-                          properties:
-                            matchers:
-                              description: Matchers defines a set of OperationMatchers
-                                that selects spec operations.
-                              items:
-                                description: OperationMatcher selects the operations
-                                  that will be part of the OperationSet.
-                                minProperties: 1
-                                properties:
-                                  methods:
-                                    description: Methods defines a set of methods
-                                      of the specs operation to select.
-                                    items:
-                                      type: string
-                                    maxItems: 10
-                                    type: array
-                                  path:
-                                    description: Path defines the exact path of the
-                                      spec operations to select.
-                                    maxLength: 255
-                                    type: string
-                                    x-kubernetes-validations:
-                                    - message: must start with a '/'
-                                      rule: self.startsWith('/')
-                                    - message: cannot contains '../'
-                                      rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
-                                  pathPrefix:
-                                    description: PathPrefix defines the path prefix
-                                      of the spec operations to select.
-                                    maxLength: 255
-                                    type: string
-                                    x-kubernetes-validations:
-                                    - message: must start with a '/'
-                                      rule: self.startsWith('/')
-                                    - message: cannot contains '../'
-                                      rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
-                                  pathRegex:
-                                    description: PathRegex defines the path regex
-                                      of the matching spec operations to select.
-                                    type: string
-                                type: object
-                                x-kubernetes-validations:
-                                - message: path, pathPrefix and pathRegex are mutually
-                                    exclusive
-                                  rule: '[has(self.path), has(self.pathPrefix), has(self.pathRegex)].filter(x,
-                                    x).size() <= 1'
-                              maxItems: 100
-                              minItems: 1
-                              type: array
-                            name:
-                              description: Name is the name of the OperationSet.
-                              maxLength: 253
-                              type: string
-                          required:
-                          - matchers
-                          - name
-                          type: object
-                        maxItems: 100
-                        type: array
-                      path:
-                        description: Path is the path on the Kubernetes Service for
-                          obtaining the specification. This Path must be queryable
-                          with a GET method and serve a YAML or JSON document.
-                        maxLength: 255
-                        type: string
-                        x-kubernetes-validations:
-                        - message: must start with a '/'
-                          rule: self.startsWith('/')
-                        - message: cannot contains '../'
-                          rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
-                      url:
-                        description: URL is a Traefik Hub agent accessible URL for
-                          obtaining the specification. This URL must be queryable
-                          with a GET method and serve a YAML or JSON document.
-                        type: string
-                        x-kubernetes-validations:
-                        - message: must be a valid URL
-                          rule: isURL(self)
-                    type: object
-                    x-kubernetes-validations:
-                    - message: path or url must be defined
-                      rule: has(self.path) || has(self.url)
-                  port:
-                    description: Port of the referenced service. A port name or port
-                      number is required.
-                    properties:
-                      name:
-                        description: Name is the name of the port on the Service.
-                          This is a mutually exclusive setting with "Number".
-                        type: string
-                      number:
-                        description: Number is the numerical port number (e.g. 80)
-                          on the Service. This is a mutually exclusive setting with
-                          "Name".
-                        format: int32
-                        type: integer
-                    type: object
-                    x-kubernetes-validations:
-                    - message: name or number must be defined
-                      rule: has(self.name) || has(self.number)
-                required:
-                - name
-                - port
-                type: object
-              stripPathPrefix:
-                description: StripPathPrefix strips the PathPrefix defined in the
-                  Routes when forwarding requests to the backend service.
-                type: boolean
               title:
                 description: Title is the public facing name of the APIVersion.
                 type: string
-            required:
-            - apiName
-            - service
             type: object
           status:
             description: The current status of this APIVersion.

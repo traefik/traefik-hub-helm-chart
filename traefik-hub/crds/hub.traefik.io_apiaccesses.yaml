@@ -12,13 +12,12 @@ spec:
     listKind: APIAccessList
     plural: apiaccesses
     singular: apiaccess
-  scope: Cluster
+  scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: APIAccess defines which group of consumers can access APIs and
-          APICollections.
+        description: APIAccess defines who can access to a set of APIs.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -35,83 +34,9 @@ spec:
           spec:
             description: The desired behavior of this APIAccess.
             properties:
-              anyGroups:
-                description: AnyGroups states that everyone will gain access to the
-                  selected APIs.
-                type: boolean
-              apiCollectionSelector:
-                description: APICollectionSelector selects the APICollections that
-                  will be accessible to the configured user groups. Multiple APIAccesses
-                  can select the same set of APICollections. This field is optional
-                  and follows standard label selector semantics. An empty APICollectionSelector
-                  matches any APICollection.
-                properties:
-                  matchExpressions:
-                    description: matchExpressions is a list of label selector requirements.
-                      The requirements are ANDed.
-                    items:
-                      description: A label selector requirement is a selector that
-                        contains values, a key, and an operator that relates the key
-                        and values.
-                      properties:
-                        key:
-                          description: key is the label key that the selector applies
-                            to.
-                          type: string
-                        operator:
-                          description: operator represents a key's relationship to
-                            a set of values. Valid operators are In, NotIn, Exists
-                            and DoesNotExist.
-                          type: string
-                        values:
-                          description: values is an array of string values. If the
-                            operator is In or NotIn, the values array must be non-empty.
-                            If the operator is Exists or DoesNotExist, the values
-                            array must be empty. This array is replaced during a strategic
-                            merge patch.
-                          items:
-                            type: string
-                          type: array
-                      required:
-                      - key
-                      - operator
-                      type: object
-                    type: array
-                  matchLabels:
-                    additionalProperties:
-                      type: string
-                    description: matchLabels is a map of {key,value} pairs. A single
-                      {key,value} in the matchLabels map is equivalent to an element
-                      of matchExpressions, whose key field is "key", the operator
-                      is "In", and the values array contains only "value". The requirements
-                      are ANDed.
-                    type: object
-                type: object
-                x-kubernetes-map-type: atomic
-              apiCollections:
-                description: APICollections defines a set of APICollections that will
-                  be accessible to the configured user groups. Multiple APIAccesses
-                  can select the same APICollections. When combined with APICollectionSelector,
-                  this set of APICollections is appended to the matching APICollections.
-                items:
-                  description: APICollectionReference contains information to identify
-                    an APICollection to add to APIAccess.
-                  properties:
-                    name:
-                      description: Name of the APICollection.
-                      maxLength: 253
-                      type: string
-                  required:
-                  - name
-                  type: object
-                maxItems: 100
-                type: array
-                x-kubernetes-validations:
-                - message: duplicated collections
-                  rule: self.all(x, self.exists_one(y, x.name == y.name))
               apiSelector:
                 description: APISelector selects the APIs that will be accessible
-                  to the configured user groups. Multiple APIAccesses can select the
+                  to the configured audience. Multiple APIAccesses can select the
                   same set of APIs. This field is optional and follows standard label
                   selector semantics. An empty APISelector matches any API.
                 properties:
@@ -159,12 +84,11 @@ spec:
                 x-kubernetes-map-type: atomic
               apis:
                 description: APIs defines a set of APIs that will be accessible to
-                  the configured user groups. Multiple APIAccesses can select the
-                  same APIs. When combined with APISelector, this set of APIs is appended
+                  the configured audience. Multiple APIAccesses can select the same
+                  APIs. When combined with APISelector, this set of APIs is appended
                   to the matching APIs.
                 items:
-                  description: APIReference contains information to identify an API
-                    to add to an APIAccess, an APICollection or an APIRateLimit.
+                  description: APIReference references an API.
                   properties:
                     name:
                       description: Name of the API.
@@ -185,17 +109,20 @@ spec:
                     && x.__namespace__ != '''' ? x.__namespace__ : ''default'') ==
                     (has(y.__namespace__) && y.__namespace__ != '''' ? y.__namespace__
                     : ''default'')))'
+              everyone:
+                description: Everyone indicates that all users will have access to
+                  the selected APIs.
+                type: boolean
               groups:
-                description: Groups are the user groups that will gain access to the
-                  selected APIs.
+                description: Groups are the consumer groups that will gain access
+                  to the selected APIs.
                 items:
                   type: string
                 type: array
               operationFilter:
-                description: OperationFilter selects the OperationSets defined on
-                  an API or an APIVersion that will be accessible to the configured
-                  user groups. If not set, all spec operations will be accessible.
-                  An empty OperationFilter matches no OperationSet.
+                description: OperationFilter specifies the allowed operations on APIs
+                  and APIVersions. If not set, all operations are available. An empty
+                  OperationFilter prohibits all operations.
                 properties:
                   include:
                     description: Include defines the names of OperationSets that will
@@ -207,9 +134,9 @@ spec:
                 type: object
             type: object
             x-kubernetes-validations:
-            - message: groups and anyGroups are mutually exclusive
-              rule: '(has(self.anyGroups) && has(self.groups)) ? !(self.anyGroups
-                && self.groups.size() > 0) : true'
+            - message: groups and everyone are mutually exclusive
+              rule: '(has(self.everyone) && has(self.groups)) ? !(self.everyone &&
+                self.groups.size() > 0) : true'
           status:
             description: The current status of this APIAccess.
             properties:
