@@ -67,7 +67,6 @@ spec:
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           name: traefik
           args:
-            - ic
             - --entrypoints.metrics.address=:9100
             - --entrypoints.traefik.address=:9000
             - --entrypoints.web.address=:8000
